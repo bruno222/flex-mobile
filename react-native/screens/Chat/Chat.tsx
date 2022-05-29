@@ -14,13 +14,14 @@ import {
 } from 'native-base';
 import React, { useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { conversationSdk, loadConversation } from '../../helper/conversations-sdk';
+import { conversationSdk } from '../../helper/conversations-sdk';
 import { ReservationActions, isReservationPending, taskrouterSdk } from '../../helper/taskrouter-sdk';
 import { conversationState, taskState } from '../../state/state';
 import { AcceptReject } from './components/AcceptReject';
 import { Dialog } from './components/Dialog';
 import { Loading } from '../../components/Loading';
 import { SendText } from './components/SendText';
+import { RenderMessage } from './components/RenderMessage';
 
 interface Props {
   navigation: any;
@@ -39,19 +40,16 @@ export const Chat = ({
     params: { chSid, name, reservationSid },
   },
 }: Props) => {
-  const scrollViewRef = useRef();
   const tasks: any = useRecoilValue(taskState);
-  const task = tasks[reservationSid];
-  console.log('a@@task', task);
   const [isOpen, setIsOpen] = useState(false);
   const [inputText, setInputText] = useState('');
-  // const [scrollValue, setScrollValue] = React.useState(10000);
+  const [conversations, setConversations] = useRecoilState(conversationState);
 
+  const scrollViewRef = useRef();
   const cancelRef = React.useRef(null);
 
-  const [conversations, setConversations] = useRecoilState(conversationState);
+  const task = tasks[reservationSid];
   const thisConversation = conversations[chSid] || { messages: [] };
-  console.log('@@', thisConversation);
 
   const onDialogClose = () => setIsOpen(false);
   const onDialogDelete = async () => {
@@ -60,23 +58,12 @@ export const Chat = ({
     navigation.goBack();
   };
 
-  conversationSdk.startOfRefresh(conversations, setConversations);
-
   // Load chat history
+  conversationSdk.startOfRefresh(conversations, setConversations);
   if (!conversations[chSid]) {
     conversationSdk.loadConversation(chSid);
     return <Loading />;
   }
-
-  const RenderMessage = ({ msg, backgroundColor, alignSelf }: any) => (
-    <Box backgroundColor={backgroundColor} borderRadius={6} width="80%" padding={2} alignSelf={alignSelf} margin={2}>
-      <Text>{msg.body}</Text>
-      <Spacer />
-      <Text fontSize="xs" color="coolGray.800" textAlign="right" paddingTop="2px">
-        11:22
-      </Text>
-    </Box>
-  );
 
   return (
     <KeyboardAvoidingView behavior={'height'} keyboardVerticalOffset={-20}>
@@ -103,6 +90,16 @@ export const Chat = ({
               <DeleteIcon size="5" mt="0.5" color="white" />
             </Pressable>
           )}
+          {!isReservationPending(task) && (
+            <Pressable
+              onPress={() => {
+                console.log('blah1');
+                setIsOpen(true);
+              }}
+            >
+              <DeleteIcon size="5" mt="0.5" color="white" />
+            </Pressable>
+          )}
           <Dialog isOpen={isOpen} cancelRef={cancelRef} onClose={onDialogClose} onDelete={onDialogDelete} />
         </HStack>
       </HStack>
@@ -110,19 +107,12 @@ export const Chat = ({
       <ScrollView
         ref={scrollViewRef}
         onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}
-        // contentContainerStyle={{ flexGrow: 1 }}
-        // onContentSizeChange={(a) => console.log('XXX', a)}
-        // ref={(view) => (scrollView = view)}
         showsVerticalScrollIndicator={false}
         w="100%"
         backgroundColor="#e5ded4"
         h="80%"
         marginBottom="130px"
         contentOffset={{ y: 10000, x: 0 }}
-
-        // onContentSizeChange={(a) => {
-        //   a_root.scrollToEnd();
-        // }}
       >
         <Box>
           {thisConversation.messages!.map((msg: any) => (
