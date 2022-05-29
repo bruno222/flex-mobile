@@ -1,5 +1,6 @@
-import { Avatar, Box, HStack, Pressable, Spacer, Text, VStack } from 'native-base';
+import { Avatar, Box, HStack, Spacer, Text, VStack } from 'native-base';
 import { useMemo } from 'react';
+import { TouchableOpacity } from 'react-native';
 import { useRecoilValue } from 'recoil';
 import { timeAgo } from '../../../helper/helper';
 import { isReservationPending } from '../../../helper/taskrouter-sdk';
@@ -39,7 +40,7 @@ export const RenderTask = ({ task, navigation }: any) => {
 
   return (
     <Box width="100%" backgroundColor={isReservationPending(task) ? 'red.100' : 'white'}>
-      <Pressable onPress={() => navigation.navigate('Chat', { chSid, name, reservationSid })}>
+      <TouchableOpacity onPress={() => navigation.navigate('Chat', { chSid, name, reservationSid })}>
         <Box pl="3" pr="2" py="4">
           <HStack alignItems="center" space={3}>
             <Avatar size="48px">{initials}</Avatar>
@@ -55,7 +56,7 @@ export const RenderTask = ({ task, navigation }: any) => {
             </Text>
           </HStack>
         </Box>
-      </Pressable>
+      </TouchableOpacity>
     </Box>
   );
 };
