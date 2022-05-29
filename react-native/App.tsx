@@ -3,10 +3,7 @@ import { Login } from './screens/Login';
 import { useState } from 'react';
 import { Main } from './screens/Main';
 import { RecoilRoot } from 'recoil';
-
-// While in development phase (yarn start), get the token from the console and put it here.
-// this will help to bypass the slow SSO process on every time, at least for one hour.
-const TOKEN_TEMP = '';
+import { TOKEN_TEMP } from './token';
 
 function App() {
   const [token, setToken] = useState(TOKEN_TEMP);
