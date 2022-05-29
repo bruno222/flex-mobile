@@ -9,6 +9,7 @@ import { conversationState, isAvailableState, taskState } from '../state/state';
 import { SetterOrUpdater, useRecoilState } from 'recoil';
 import { conversationSdk } from '../helper/conversations-sdk';
 import { Loading } from '../components/Loading';
+import { ChatInfo } from './ChatInfo/ChatInfo';
 const Stack = createStackNavigator();
 
 export const Main = ({ token, setToken }: { token: string; setToken: SetterOrUpdater<{}> }) => {
@@ -52,6 +53,13 @@ export const Main = ({ token, setToken }: { token: string; setToken: SetterOrUpd
             <Stack.Screen
               name="Chat"
               component={Chat}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="ChatInfo"
+              component={ChatInfo}
               options={{
                 headerShown: false,
               }}

@@ -26,6 +26,7 @@ import { SendText } from './components/SendText';
 import { RenderMessage } from './components/RenderMessage';
 import { IconOutboundCall } from './components/IconOutboundCall';
 import { IconDelete } from './components/IconDelete';
+import { IconInfo } from './components/IconInfo';
 
 interface Props {
   navigation: any;
@@ -84,6 +85,7 @@ export const Chat = ({
           <DeleteIcon size="5" mt="0.5" color="white" />
         </HStack> */}
         <HStack paddingRight="10px">
+          <IconInfo attributes={task.attributes} navigate={navigation.navigate} />
           <IconOutboundCall from={task.attributes.from} />
           <IconDelete task={task} setIsOpen={setIsOpen} />
           <Dialog isOpen={isOpen} cancelRef={cancelRef} onClose={onDialogClose} onDelete={onDialogDelete} />
