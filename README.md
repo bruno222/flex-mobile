@@ -21,9 +21,9 @@ in progress....
     - [ ] Add a way to set the runtime domain (so Customers and SEs can try on their own without installing the whole toolchain)
     - [ ] Add Voice Calls: receive the call via PSTN (contact_url: +49123123) - Or install that voice-sdk repo to receive calls on ReactNative
     - [ ] Change icons and splashscreen (/assets folder + app.json)
-    - [ ] Show badge with the number of unread msgs in the Tasks.tsx
 
 ### Next Release
 
     - [x] Add a button to start an outbound call
     - [x] Add a screen to print out the task.attributes (similary as we have in the INFO tab on Desktop)
+    - [x] Show badge with the number of unread msgs in the Tasks.tsx

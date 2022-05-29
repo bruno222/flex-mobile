@@ -1,5 +1,6 @@
 import { Client, Message } from '@twilio/conversations';
 import { SetterOrUpdater } from 'recoil';
+import { ConversationsState, UnreadBadge } from '../state/state';
 
 //
 // Main Class
@@ -7,19 +8,26 @@ import { SetterOrUpdater } from 'recoil';
 class Conversations {
   private client!: Client;
   private conversations!: any;
-  private setConversations!: SetterOrUpdater<{}>;
+  private setConversations!: SetterOrUpdater<ConversationsState>;
+  private setUnreadBadge!: SetterOrUpdater<UnreadBadge>;
 
   constructor() {}
 
   //
   // Public Functions
   //
-  public startOfRefresh = (conversations: any, setConversations: SetterOrUpdater<{}>) => {
+  public startOrRefreshSetters = (
+    conversations: any,
+    setConversations: SetterOrUpdater<ConversationsState>,
+    setUnreadBadge: SetterOrUpdater<UnreadBadge>
+  ) => {
     this.conversations = conversations;
     this.setConversations = setConversations;
+    this.setUnreadBadge = setUnreadBadge;
   };
 
-  public updateToken = (token: string) => {
+  public startOrRefresh = (token: string) => {
+    console.log('@@updateToken');
     // first time
     if (!this.client) {
       console.log('@@conversation - starting...');
@@ -54,7 +62,7 @@ class Conversations {
 
     // TODO: why so slow to send new messages when value is 100?! I think we have to work on Chat.tsx > ScrollView component, perhaps change to something more performant?!
     const MESSAGES_LOAD_COUNT = 10;
-    console.log('@@conversation - loadChat chSid', chSid);
+    console.log('@@conversation - loadChat chSid', chSid, this.conversations[chSid]);
 
     if (this.conversations[chSid] && this.conversations[chSid].messages) {
       return;
@@ -75,10 +83,8 @@ class Conversations {
       };
     });
 
-    // conversation.addListener('messageAdded', onJustLogForNow('messageAdded'));
     conversation.addListener('messageRemoved', onJustLogForNow('messageRemoved'));
     conversation.addListener('messageUpdated', onJustLogForNow('messageUpdated'));
-
     conversation.addListener('participantJoined', onJustLogForNow('participantJoined'));
     conversation.addListener('participantLeft', onJustLogForNow('participantLeft'));
     conversation.addListener('typingStarted', onJustLogForNow('typingStarted'));
@@ -89,6 +95,26 @@ class Conversations {
 
     conversation.addListener('messageAdded', (message) => {
       console.log('@@converstion - messageAdded');
+
+      this.setUnreadBadge((old) => {
+        // do not update in case the active chat window is the current one (when it is -1 means "active window")
+        if (old[chSid] === -1) {
+          return old;
+        }
+
+        console.log('@@@setUnreadBadge old', old);
+        console.log('@@@setUnreadBadge new', {
+          ...old,
+          [chSid]: (old[chSid] || 0) + 1,
+        });
+
+        // else, update with "+1"
+        return {
+          ...old,
+          [chSid]: (old[chSid] || 0) + 1,
+        };
+      });
+
       this.setConversations((old: any) => {
         return {
           ...old,
@@ -102,6 +128,10 @@ class Conversations {
   };
   //
   // Private Functions
+  //
+
+  //
+  // Listeners
   //
   public addListeners = () => {
     this.client.onWithReplay('connectionStateChanged', (state: any) => {
@@ -124,10 +154,6 @@ class Conversations {
       );
     });
   };
-
-  //
-  // Listeners
-  //
 }
 
 export const conversationSdk = new Conversations();
