@@ -1,0 +1,4 @@
+- go to https://github.com/bruno222/reactnative-twilio-taskrouter.js and follow the instructions of the readme there
+- I did this because
+  1. one of the packages of taskrouter, loglevel, was breaking ReactNative... So I had to disabled it.
+  2. as I was touching taskrouter, I took advantage to change a bit one of the contracts... to expose externally the error (e.g "error because token is invalid", so ReactNative could show the login once again)

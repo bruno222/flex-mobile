@@ -1,0 +1,13 @@
+- Generate a new .apk build:
+
+  eas build --platform android --profile preview
+
+  more info https://docs.expo.dev/build-reference/apk/
+
+- Execute locally:
+
+  expo start --no-dev --minify
+
+- Track errors on Android Emulator:
+
+  adb logcat | grep " E "

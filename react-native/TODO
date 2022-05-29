@@ -1,0 +1,46 @@
+v1:
+
+    Tech-debt:
+
+        - [x] taskrouter
+        - [x] conversations
+        - [x] put taskrouter in react native to see if it will work
+        - [x] fix taskrouter to work on react native
+        - [x] put conversations in react native to see if it will work
+        - [x] compile an APK to test
+        - [x] add UI
+        - [ ] implement Function to handle the Token of the conversation (also with that listener "tokenAboutToExpire" thing)
+        - [ ] remove Sentry token from app.json and use it as env - https://docs.expo.dev/guides/using-sentry/
+        - [ ] proper configure Sentry (app.json) to not be in Development mode?
+        - [x] implement logic and UI to move the agent activity to On/offline
+        - [ ] house-keeping on /helper/{conversations | taskrouter}.tsx - both needs to be an organized Class instead of this mess.
+        - [ ] show a Toast when rejected promises get raised
+
+    Features:
+
+        - [x] onAccept, add agent as a participant of the chat
+        - [x] auto-scroll chat history
+        - [x] Add Loading Screen
+        - [x] add accept/reject task buttons
+        - [x] implement complete task logic
+
+v2.1:
+
+    Features
+        - [ ] receive the call via PSTN (contact_url: +49123123)
+        - [ ] push notification
+
+v2.1:
+
+    Features
+
+        - [ ] add badge when you have unread messages on Tasks.tsx
+        - [ ] change SSO to any-email@twilio.com
+        - [ ] add push notification
+        - [ ] The wifi cover issue - agent desktop needs to be connected otherwise the routing engine doesn't know if the agent is logged in. Agents would be logged out and would need to re-login.
+        - [ ] Inability to tell if the agent is on the phone doing a manual call or received a direct call. The CC would then route another call to the agent whilst he's talking to somebody through PSTN
+
+v3
+
+    Features
+        - [ ] add call via contact_uri?
