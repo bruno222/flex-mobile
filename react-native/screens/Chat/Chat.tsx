@@ -1,8 +1,10 @@
+import { AntDesign } from '@expo/vector-icons';
 import {
   ArrowBackIcon,
   Box,
   DeleteIcon,
   HStack,
+  Icon,
   IconButton,
   Input,
   KeyboardAvoidingView,
@@ -22,6 +24,8 @@ import { Dialog } from './components/Dialog';
 import { Loading } from '../../components/Loading';
 import { SendText } from './components/SendText';
 import { RenderMessage } from './components/RenderMessage';
+import { IconOutboundCall } from './components/IconOutboundCall';
+import { IconDelete } from './components/IconDelete';
 
 interface Props {
   navigation: any;
@@ -80,26 +84,8 @@ export const Chat = ({
           <DeleteIcon size="5" mt="0.5" color="white" />
         </HStack> */}
         <HStack paddingRight="10px">
-          {!isReservationPending(task) && (
-            <Pressable
-              onPress={() => {
-                console.log('blah1');
-                setIsOpen(true);
-              }}
-            >
-              <DeleteIcon size="5" mt="0.5" color="white" />
-            </Pressable>
-          )}
-          {!isReservationPending(task) && (
-            <Pressable
-              onPress={() => {
-                console.log('blah1');
-                setIsOpen(true);
-              }}
-            >
-              <DeleteIcon size="5" mt="0.5" color="white" />
-            </Pressable>
-          )}
+          <IconOutboundCall from={task.attributes.from} />
+          <IconDelete task={task} setIsOpen={setIsOpen} />
           <Dialog isOpen={isOpen} cancelRef={cancelRef} onClose={onDialogClose} onDelete={onDialogDelete} />
         </HStack>
       </HStack>
