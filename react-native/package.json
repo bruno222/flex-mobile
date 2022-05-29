@@ -7,6 +7,7 @@
     "start:no-dev": "expo start --no-dev",
     "start:almost-prod": "expo start --no-dev --minify",
     "build": "eas build --platform android --profile preview",
+    "logcat": "adb logcat | grep \" E \"",
     "publish": "expo publish",
     "android": "expo start --android",
     "ios": "expo start --ios",
