@@ -26,4 +26,4 @@ in progress....
 ### Next Release
 
     - [x] Add a button to start an outbound call
-    - [x] Add a screen to print out the task.attributes (similary as we have in the INFO tab on Tasktop)
+    - [x] Add a screen to print out the task.attributes (similary as we have in the INFO tab on Desktop)

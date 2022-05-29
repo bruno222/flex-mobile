@@ -1,6 +1,6 @@
-import { Avatar, Box, Heading, HStack, Pressable, ScrollView, Spacer, StatusBar, Switch, Text, View, VStack } from 'native-base';
+import { Box, Heading, HStack, ScrollView, StatusBar, Switch, Text, View, VStack } from 'native-base';
 import React from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { taskrouterSdk } from '../../helper/taskrouter-sdk';
 import { isAvailableState, taskState } from '../../state/state';
 import { RenderTask } from './components/RenderTask';
