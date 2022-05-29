@@ -1,6 +1,6 @@
-import { DeleteIcon, Icon, Pressable } from 'native-base';
-import { Linking } from 'react-native';
-import { FontAwesome5, AntDesign } from '@expo/vector-icons';
+import { Icon } from 'native-base';
+import { Linking, TouchableOpacity } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 
 export const IconOutboundCall = ({ from }: any) => {
   console.log('@@from', from);
@@ -13,8 +13,8 @@ export const IconOutboundCall = ({ from }: any) => {
     Linking.openURL(`tel:${from}`);
   };
   return (
-    <Pressable onPress={onPress}>
+    <TouchableOpacity onPress={onPress}>
       <Icon as={AntDesign} name="phone" size="5" mt="0.5" marginRight="20px" color="white" />
-    </Pressable>
+    </TouchableOpacity>
   );
 };
