@@ -12,11 +12,6 @@ export interface UnreadBadge {
   [key: string]: number;
 }
 
-export const taskState = atom({
-  key: 'taskState',
-  default: {},
-});
-
 export const conversationState = atom({
   key: 'conversationState',
   default: {} as ConversationsState,

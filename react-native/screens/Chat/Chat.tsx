@@ -1,24 +1,9 @@
-import { AntDesign } from '@expo/vector-icons';
-import {
-  ArrowBackIcon,
-  Box,
-  DeleteIcon,
-  HStack,
-  Icon,
-  IconButton,
-  Input,
-  KeyboardAvoidingView,
-  Pressable,
-  ScrollView,
-  Spacer,
-  StatusBar,
-  Text,
-} from 'native-base';
+import { ArrowBackIcon, Box, HStack, IconButton, KeyboardAvoidingView, ScrollView, StatusBar, Text } from 'native-base';
 import React, { useEffect, useRef, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { conversationSdk } from '../../helper/conversations-sdk';
 import { ReservationActions, isReservationPending, taskrouterSdk } from '../../helper/taskrouter-sdk';
-import { conversationState, taskState, unreadBadgeState } from '../../state/state';
+import { conversationState, unreadBadgeState } from '../../state/state';
 import { AcceptReject } from './components/AcceptReject';
 import { Dialog } from './components/Dialog';
 import { Loading } from '../../components/Loading';
@@ -27,6 +12,7 @@ import { RenderMessage } from './components/RenderMessage';
 import { IconOutboundCall } from './components/IconOutboundCall';
 import { IconDelete } from './components/IconDelete';
 import { IconInfo } from './components/IconInfo';
+import { reservationsStore } from '../store/reservations-store';
 
 interface Props {
   navigation: any;
@@ -45,15 +31,14 @@ export const Chat = ({
     params: { chSid, name, reservationSid },
   },
 }: Props) => {
-  const tasks: any = useRecoilValue(taskState);
+  // const tasks: any = useRecoilValue(taskState);
   const [isOpen, setIsOpen] = useState(false);
   const [inputText, setInputText] = useState('');
   const [conversations, setConversations] = useRecoilState(conversationState);
   const [unreadBadge, setUnreadBadge] = useRecoilState(unreadBadgeState);
   const scrollViewRef = useRef();
   const cancelRef = React.useRef(null);
-
-  const task = tasks[reservationSid];
+  const task = reservationsStore.get(reservationSid);
   const thisConversation = conversations[chSid] || { messages: [] };
 
   const onDialogClose = () => setIsOpen(false);

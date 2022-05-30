@@ -1,5 +1,6 @@
 import React from 'react';
 import { SetterOrUpdater } from 'recoil';
+import { reservationsStore, Task } from '../screens/store/reservations-store';
 import { Reservation, Supervisor, Worker } from './taskrouter-for-reactnative/index.window';
 
 //
@@ -28,7 +29,6 @@ class TaskRouter {
   private worker!: Worker;
   private token!: string;
   private setToken!: SetterOrUpdater<{}>;
-  private setTasks!: SetterOrUpdater<{}>;
   private setIsAvailable!: SetterOrUpdater<boolean>;
   setTaskRouterHasStarted!: React.Dispatch<React.SetStateAction<boolean>>;
   private startConversations!: Function;
@@ -41,7 +41,6 @@ class TaskRouter {
   public startOrRefresh = (
     token: string,
     setToken: SetterOrUpdater<{}>,
-    setTasks: SetterOrUpdater<{}>,
     setIsAvailable: SetterOrUpdater<boolean>,
     setTaskRouterHasStarted: React.Dispatch<React.SetStateAction<boolean>>,
     startConversations: Function
@@ -49,7 +48,6 @@ class TaskRouter {
     this.token = token;
     this.setToken = setToken;
     this.setToken = setToken;
-    this.setTasks = setTasks;
     this.setIsAvailable = setIsAvailable;
     this.setTaskRouterHasStarted = setTaskRouterHasStarted;
     this.startConversations = startConversations;
@@ -93,9 +91,7 @@ class TaskRouter {
       task: { attributes, sid, workflowName, queueName, status, age, priority },
     } = reservation;
 
-    console.log('@@loadTask', event, reservationSid, sid);
-
-    const task = {
+    const task: Task = {
       reservationSid,
       reservationStatus,
       attributes,
@@ -107,33 +103,31 @@ class TaskRouter {
       timeAgo: age,
     };
 
-    this.setTasks((old: any) => {
-      // Add listeners only once
-      if (!old[reservationSid] || !old[reservationSid].addedListeners) {
-        this.addListeners(reservationSid);
-      }
+    //
+    // Delete
+    //
+    if (['rejected', 'timeout'].includes(event) || ['canceled', 'completed'].includes(status)) {
+      reservationsStore.del(reservationSid);
+      this.worker.reservations.get(reservationSid)?.task.removeAllListeners();
+      this.worker.reservations.get(reservationSid)?.removeAllListeners();
 
-      const newState = { ...old, [reservationSid]: { ...task, addedListeners: true } };
+      // TODO: Remove Chat
+      // if (attributes && (attributes as any).conversationSid) {
+      // TEMPOFF cleanupChat((attributes as any).conversationSid);
+      return;
+    }
 
-      // Remove Task from State
-      console.log('@@@ new status: ', event, newState[reservationSid].status);
-      if (
-        newState[reservationSid] &&
-        (['rejected', 'timeout'].includes(event) || ['canceled', 'completed'].includes(newState[reservationSid].status))
-      ) {
-        // Remove Chat
-        if (attributes && (attributes as any).conversationSid) {
-          // TEMPOFF cleanupChat((attributes as any).conversationSid);
-        }
+    //
+    // Add
+    //
+    if (!reservationsStore.exists(reservationSid)) {
+      this.addListeners(reservationSid);
+    }
 
-        this.worker.reservations.get(reservationSid)?.task.removeAllListeners();
-        this.worker.reservations.get(reservationSid)?.removeAllListeners();
-        delete newState[reservationSid];
-      }
-
-      // Render
-      return newState;
-    });
+    //
+    // Add/Update
+    //
+    reservationsStore.add(task);
   };
 
   private hardReset = (alsoCleanToken: boolean) => {

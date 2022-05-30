@@ -2,12 +2,14 @@ import { Box, Heading, HStack, ScrollView, StatusBar, Switch, Text, View, VStack
 import React from 'react';
 import { useRecoilValue } from 'recoil';
 import { taskrouterSdk } from '../../helper/taskrouter-sdk';
-import { isAvailableState, taskState } from '../../state/state';
+import { isAvailableState } from '../../state/state';
+import { reservationsStore } from '../store/reservations-store';
 import { RenderTask } from './components/RenderTask';
 
 export const Tasks = ({ navigation /*, route: { params: tasks }*/ }: any) => {
-  const tasks = useRecoilValue(taskState);
-  const renderSafetyBottom = Object.values(tasks).length > 5;
+  // const tasks = useRecoilValue(taskState);
+  const renderSafetyBottom = reservationsStore.length() > 5;
+  const hasTasks = reservationsStore.length() > 0;
   const isAvailable = useRecoilValue(isAvailableState);
   // console.log('@@ isAvailable2', isAvailable);
 
@@ -16,11 +18,9 @@ export const Tasks = ({ navigation /*, route: { params: tasks }*/ }: any) => {
     await taskrouterSdk.toggleWorkerActivity(value);
   };
 
-  const hasTasks = Object.values(tasks).length > 0;
-
   const RenderTasks = () => (
     <ScrollView showsVerticalScrollIndicator={false} w="100%" backgroundColor="white">
-      {Object.values(tasks).map((task: any) => (
+      {Object.values(reservationsStore.all).map((task: any) => (
         <RenderTask key={task.sid} task={task} navigation={navigation} />
       ))}
       {renderSafetyBottom && <Box safeAreaBottom={12} />}
