@@ -14,11 +14,11 @@ import {
   StatusBar,
   Text,
 } from 'native-base';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { conversationSdk } from '../../helper/conversations-sdk';
 import { ReservationActions, isReservationPending, taskrouterSdk } from '../../helper/taskrouter-sdk';
-import { conversationState, taskState } from '../../state/state';
+import { conversationState, taskState, unreadBadgeState } from '../../state/state';
 import { AcceptReject } from './components/AcceptReject';
 import { Dialog } from './components/Dialog';
 import { Loading } from '../../components/Loading';
@@ -49,7 +49,7 @@ export const Chat = ({
   const [isOpen, setIsOpen] = useState(false);
   const [inputText, setInputText] = useState('');
   const [conversations, setConversations] = useRecoilState(conversationState);
-
+  const [unreadBadge, setUnreadBadge] = useRecoilState(unreadBadgeState);
   const scrollViewRef = useRef();
   const cancelRef = React.useRef(null);
 
@@ -63,10 +63,30 @@ export const Chat = ({
     navigation.goBack();
   };
 
-  // Load chat history
-  conversationSdk.startOfRefresh(conversations, setConversations);
-  if (!conversations[chSid]) {
+  // To control the unreadBadge
+  //   -1 --> "this chSid window is the active one"
+  //   0  --> "not anymore"
+  useEffect(() => {
+    setUnreadBadge((old: any) => ({
+      ...old,
+      [chSid]: -1,
+    }));
+
+    return () => {
+      setUnreadBadge((old: any) => ({
+        ...old,
+        [chSid]: 0,
+      }));
+    };
+  }, []);
+
+  // Fetch messages and update Setters inside of the SDK
+  useEffect(() => {
+    conversationSdk.startOrRefreshSetters(conversations, setConversations, setUnreadBadge);
     conversationSdk.loadConversation(chSid);
+  }, []);
+
+  if (!conversations[chSid]) {
     return <Loading />;
   }
 

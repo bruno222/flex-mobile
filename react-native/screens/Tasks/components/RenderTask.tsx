@@ -1,12 +1,15 @@
-import { Avatar, Box, HStack, Spacer, Text, VStack } from 'native-base';
+import { Avatar, Badge, Box, HStack, Spacer, Text, VStack } from 'native-base';
 import { useMemo } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { useRecoilValue } from 'recoil';
 import { timeAgo } from '../../../helper/helper';
 import { isReservationPending } from '../../../helper/taskrouter-sdk';
-import { conversationState } from '../../../state/state';
+import { conversationState, unreadBadgeState } from '../../../state/state';
+import { UnreadMsgs } from './UnreadMsgs';
 
 export const RenderTask = ({ task, navigation }: any) => {
+  const unreadBadge = useRecoilValue(unreadBadgeState);
+
   // Not a conversation task
   if (!task || !task.attributes || !task.attributes.conversationSid) {
     return null;
@@ -38,6 +41,8 @@ export const RenderTask = ({ task, navigation }: any) => {
     [name]
   );
 
+  const unreadMsgs = unreadBadge[chSid] || 0;
+
   return (
     <Box width="100%" backgroundColor={isReservationPending(task) ? 'red.100' : 'white'}>
       <TouchableOpacity onPress={() => navigation.navigate('Chat', { chSid, name, reservationSid })}>
@@ -51,9 +56,18 @@ export const RenderTask = ({ task, navigation }: any) => {
               <Text isTruncated>{lastMessage}</Text>
             </VStack>
             <Spacer />
-            <Text fontSize="xs" color="coolGray.800" alignSelf="flex-start">
-              {timeAgo(task.timeAgo)}
-            </Text>
+            <VStack maxWidth="38%">
+              <VStack>
+                <VStack>
+                  <Text fontSize="xs" color="coolGray.800" alignSelf="flex-start">
+                    {timeAgo(task.timeAgo)}
+                  </Text>
+                </VStack>
+                <VStack marginTop="7px">
+                  <UnreadMsgs unreadMsgs={unreadMsgs} />
+                </VStack>
+              </VStack>
+            </VStack>
           </HStack>
         </Box>
       </TouchableOpacity>
