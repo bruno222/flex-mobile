@@ -1,6 +1,6 @@
 import React from 'react';
 import { SetterOrUpdater } from 'recoil';
-import { reservationsStore, Task } from '../screens/store/reservations-store';
+import { reservationsStore, Task } from '../store/reservations-store';
 import { Reservation, Supervisor, Worker } from './taskrouter-for-reactnative/index.window';
 
 //
@@ -127,6 +127,7 @@ class TaskRouter {
     //
     // Add/Update
     //
+    console.log('@@ taskrouter store add task: ', task);
     reservationsStore.add(task);
   };
 

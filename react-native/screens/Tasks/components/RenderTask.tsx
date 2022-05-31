@@ -1,33 +1,30 @@
-import { Avatar, Badge, Box, HStack, Spacer, Text, VStack } from 'native-base';
+import { view } from '@risingstack/react-easy-state';
+import { Avatar, Box, HStack, Spacer, Text, VStack } from 'native-base';
 import { useMemo } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { useRecoilValue } from 'recoil';
 import { timeAgo } from '../../../helper/helper';
 import { isReservationPending } from '../../../helper/taskrouter-sdk';
-import { conversationState, unreadBadgeState } from '../../../state/state';
+import { conversationsStore } from '../../../store/conversations-store';
+// import { conversationState } from '../../../state/state';
 import { UnreadMsgs } from './UnreadMsgs';
 
-export const RenderTask = ({ task, navigation }: any) => {
-  const unreadBadge = useRecoilValue(unreadBadgeState);
-
+export const RenderTask = view(({ task, navigation }: any) => {
   // Not a conversation task
   if (!task || !task.attributes || !task.attributes.conversationSid) {
     return null;
   }
 
-  console.log('@@task', task);
+  console.log('@@atask', task);
 
   const {
     reservationSid,
     attributes: { conversationSid: chSid },
   } = task;
   const name: string = task.attributes.name || task.attributes.from;
-  const conversations = useRecoilValue(conversationState);
+  // const conversations = useRecoilValue(conversationState);
 
-  const lastMessage =
-    conversations && conversations[chSid] && conversations[chSid].messages && conversations[chSid].messages!.length > 0
-      ? conversations[chSid].messages![conversations[chSid].messages!.length - 1].body
-      : '';
+  const lastMessage = conversationsStore.getLastMessage(chSid);
 
   const initials = useMemo(
     () =>
@@ -40,8 +37,6 @@ export const RenderTask = ({ task, navigation }: any) => {
             .reduce((previousValue, currentValue) => previousValue.substring(0, 1) + currentValue.substring(0, 1), ''),
     [name]
   );
-
-  const unreadMsgs = unreadBadge[chSid] || 0;
 
   return (
     <Box width="100%" backgroundColor={isReservationPending(task) ? 'red.100' : 'white'}>
@@ -64,7 +59,7 @@ export const RenderTask = ({ task, navigation }: any) => {
                   </Text>
                 </VStack>
                 <VStack marginTop="7px">
-                  <UnreadMsgs unreadMsgs={unreadMsgs} />
+                  <UnreadMsgs chSid={chSid} />
                 </VStack>
               </VStack>
             </VStack>
@@ -73,4 +68,4 @@ export const RenderTask = ({ task, navigation }: any) => {
       </TouchableOpacity>
     </Box>
   );
-};
+});

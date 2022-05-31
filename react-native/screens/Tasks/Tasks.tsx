@@ -1,12 +1,14 @@
+import { useIsFocused } from '@react-navigation/native';
 import { Box, Heading, HStack, ScrollView, StatusBar, Switch, Text, View, VStack } from 'native-base';
 import React from 'react';
 import { useRecoilValue } from 'recoil';
 import { taskrouterSdk } from '../../helper/taskrouter-sdk';
 import { isAvailableState } from '../../state/state';
-import { reservationsStore } from '../store/reservations-store';
+import { reservationsStore } from '../../store/reservations-store';
 import { RenderTask } from './components/RenderTask';
 
 export const Tasks = ({ navigation /*, route: { params: tasks }*/ }: any) => {
+  const isFocused = useIsFocused();
   // const tasks = useRecoilValue(taskState);
   const renderSafetyBottom = reservationsStore.length() > 5;
   const hasTasks = reservationsStore.length() > 0;
@@ -17,6 +19,8 @@ export const Tasks = ({ navigation /*, route: { params: tasks }*/ }: any) => {
     const value = e.nativeEvent.value;
     await taskrouterSdk.toggleWorkerActivity(value);
   };
+
+  console.log('@@a tasks re-rendered');
 
   const RenderTasks = () => (
     <ScrollView showsVerticalScrollIndicator={false} w="100%" backgroundColor="white">

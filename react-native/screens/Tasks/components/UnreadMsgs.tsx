@@ -1,9 +1,11 @@
+import { view } from '@risingstack/react-easy-state';
 import { Badge } from 'native-base';
+import { unreadBadgeStore } from '../../../store/unread-badge-store';
 
-export const UnreadMsgs = ({ unreadMsgs }: { unreadMsgs: number }) => {
-  const hideBadge = unreadMsgs <= 0;
+export const UnreadMsgs = view(({ chSid }: { chSid: string }) => {
+  const unreadMsgs = unreadBadgeStore.get(chSid);
 
-  if (hideBadge) {
+  if (!unreadMsgs) {
     return null;
   }
 
@@ -20,4 +22,4 @@ export const UnreadMsgs = ({ unreadMsgs }: { unreadMsgs: number }) => {
       {unreadMsgs}
     </Badge>
   );
-};
+});
