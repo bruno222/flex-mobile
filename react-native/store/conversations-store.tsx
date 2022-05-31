@@ -11,59 +11,44 @@ export interface MessageStore {
 
 export interface Conversation {
   messages: MessageStore[];
-  sendMessage: (text: string) => Promise<number>;
-  // reservationStatus: string;
-  // attributes: any;
-  // sid: string;
-  // workflowName: string;
-  // queueName: string;
-  // status: 'pending' | 'reserved' | 'assigned' | 'canceled' | 'completed' | 'wrapping';
-  // priority: number;
-  // timeAgo: number;
+  sendMessage: (text: string) => Promise<any>;
 }
 
 interface Conversations {
   [key: string]: Conversation;
 }
 
+const emptyObj: Conversation = {
+  sendMessage: async (text: string) => {},
+  messages: [],
+};
 export const conversationsStore = store({
   all: {} as Conversations,
   addMessage(chSid: string, message: MessageStore) {
     conversationsStore.all[chSid].messages.push(message);
     unreadBadgeStore.add(chSid);
   },
-  startNewChat(chSid: string, sendMessage: (text: string) => Promise<number>, messages: MessageStore[]) {
+  startNewChat(chSid: string, sendMessage: (text: string) => Promise<any>, messages: MessageStore[]) {
     console.log('@@b startNewChat', chSid, messages);
     conversationsStore.all[chSid] = {
       sendMessage,
       messages,
     };
   },
-
-  // del(reservationSid: string) {
-  //   delete reservationsStore.all[reservationSid];
-  // },
   get(chSid: string) {
-    return conversationsStore.all[chSid];
+    return conversationsStore.all[chSid] || emptyObj;
   },
   exists(chSid: string) {
     return !!conversationsStore.all[chSid];
   },
   getLastMessage(chSid: string) {
-    const conversation = conversationsStore.get(chSid);
-    if (!conversation) {
-      return '';
-    }
+    const { messages } = conversationsStore.get(chSid);
 
-    const { messages } = conversation;
-    if (!messages || messages.length === 0) {
+    if (messages.length === 0) {
       return '';
     }
 
     const message = messages[messages.length - 1].body;
     return message;
   },
-  // length() {
-  //   return Object.values(reservationsStore.all).length;
-  // },
 });

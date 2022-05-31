@@ -60,7 +60,7 @@ export const Chat = view(
       conversationSdk.loadConversation(chSid);
     }, []);
 
-    if (!thisConversation) {
+    if (!conversationsStore.exists(chSid)) {
       return <Loading />;
     }
 

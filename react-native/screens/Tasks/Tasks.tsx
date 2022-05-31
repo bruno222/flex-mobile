@@ -33,7 +33,7 @@ export const Tasks = ({ navigation /*, route: { params: tasks }*/ }: any) => {
 
   const RenderNoTasks = () => (
     <Box w="100%" justifyContent="center" alignItems="center" h="85%">
-      <Heading color="primary.500" fontSize="xl">
+      <Heading color="red.400" fontSize="xl">
         Oh, you have no tasks.
       </Heading>
     </Box>
