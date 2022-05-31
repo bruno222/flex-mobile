@@ -1,4 +1,5 @@
 import { useIsFocused } from '@react-navigation/native';
+import { view } from '@risingstack/react-easy-state';
 import { Box, Heading, HStack, ScrollView, StatusBar, Switch, Text, View, VStack } from 'native-base';
 import React from 'react';
 import { useRecoilValue } from 'recoil';
@@ -7,7 +8,7 @@ import { isAvailableState } from '../../state/state';
 import { reservationsStore } from '../../store/reservations-store';
 import { RenderTask } from './components/RenderTask';
 
-export const Tasks = ({ navigation /*, route: { params: tasks }*/ }: any) => {
+export const Tasks = view(({ navigation /*, route: { params: tasks }*/ }: any) => {
   const isFocused = useIsFocused();
   // const tasks = useRecoilValue(taskState);
   const renderSafetyBottom = reservationsStore.length() > 5;
@@ -60,4 +61,4 @@ export const Tasks = ({ navigation /*, route: { params: tasks }*/ }: any) => {
       {hasTasks ? <RenderTasks /> : <RenderNoTasks />}
     </View>
   );
-};
+});
