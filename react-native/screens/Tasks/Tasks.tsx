@@ -1,20 +1,15 @@
-import { useIsFocused } from '@react-navigation/native';
 import { view } from '@risingstack/react-easy-state';
 import { Box, Heading, HStack, ScrollView, StatusBar, Switch, Text, View, VStack } from 'native-base';
 import React from 'react';
-import { useRecoilValue } from 'recoil';
 import { taskrouterSdk } from '../../helper/taskrouter-sdk';
-import { isAvailableState } from '../../state/state';
 import { reservationsStore } from '../../store/reservations-store';
+import { tinyStore } from '../../store/tiny-store';
 import { RenderTask } from './components/RenderTask';
 
-export const Tasks = view(({ navigation /*, route: { params: tasks }*/ }: any) => {
-  const isFocused = useIsFocused();
-  // const tasks = useRecoilValue(taskState);
+export const Tasks = view(({ navigation }: any) => {
+  const { isAvailable } = tinyStore;
   const renderSafetyBottom = reservationsStore.length() > 5;
   const hasTasks = reservationsStore.length() > 0;
-  const isAvailable = useRecoilValue(isAvailableState);
-  // console.log('@@ isAvailable2', isAvailable);
 
   const onChangeActivity = async (e: any) => {
     const value = e.nativeEvent.value;

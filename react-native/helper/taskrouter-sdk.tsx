@@ -1,6 +1,7 @@
 import React from 'react';
 import { SetterOrUpdater } from 'recoil';
 import { reservationsStore, Task } from '../store/reservations-store';
+import { tinyStore } from '../store/tiny-store';
 import { Reservation, Supervisor, Worker } from './taskrouter-for-reactnative/index.window';
 
 //
@@ -29,7 +30,6 @@ class TaskRouter {
   private worker!: Worker;
   private token!: string;
   private setToken!: SetterOrUpdater<{}>;
-  private setIsAvailable!: SetterOrUpdater<boolean>;
   setTaskRouterHasStarted!: React.Dispatch<React.SetStateAction<boolean>>;
   private startConversations!: Function;
 
@@ -41,14 +41,12 @@ class TaskRouter {
   public startOrRefresh = (
     token: string,
     setToken: SetterOrUpdater<{}>,
-    setIsAvailable: SetterOrUpdater<boolean>,
     setTaskRouterHasStarted: React.Dispatch<React.SetStateAction<boolean>>,
     startConversations: Function
   ) => {
     this.token = token;
     this.setToken = setToken;
     this.setToken = setToken;
-    this.setIsAvailable = setIsAvailable;
     this.setTaskRouterHasStarted = setTaskRouterHasStarted;
     this.startConversations = startConversations;
 
@@ -142,8 +140,8 @@ class TaskRouter {
 
   private dispatchWorkerActivity = () => {
     const isAvailable = this.worker.activity.name === 'Available';
-    // console.log('@@ isAvailable', isAvailable, this.worker.activity.name);
-    this.setIsAvailable(isAvailable);
+    tinyStore.isAvailable = isAvailable;
+    console.log('@@ isAvailable', isAvailable, this.worker.activity.name);
   };
 
   //
