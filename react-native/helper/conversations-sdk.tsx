@@ -1,31 +1,17 @@
 import { Client, Message } from '@twilio/conversations';
-import { SetterOrUpdater } from 'recoil';
-import { ConversationsState, UnreadBadge } from '../state/state';
+import { MessageStore, conversationsStore } from '../store/conversations-store';
+import { unreadBadgeStore } from '../store/unread-badge-store';
 
 //
 // Main Class
 //
 class Conversations {
   private client!: Client;
-  private conversations!: any;
-  private setConversations!: SetterOrUpdater<ConversationsState>;
-  private setUnreadBadge!: SetterOrUpdater<UnreadBadge>;
-
   constructor() {}
 
   //
   // Public Functions
   //
-  public startOrRefreshSetters = (
-    conversations: any,
-    setConversations: SetterOrUpdater<ConversationsState>,
-    setUnreadBadge: SetterOrUpdater<UnreadBadge>
-  ) => {
-    this.conversations = conversations;
-    this.setConversations = setConversations;
-    this.setUnreadBadge = setUnreadBadge;
-  };
-
   public startOrRefresh = (token: string) => {
     console.log('@@updateToken');
     // first time
@@ -54,34 +40,25 @@ class Conversations {
     conversation.add(me);
   };
 
-  public loadConversation = async (/*conversations: any, setConversations: any,*/ chSid: string) => {
+  public loadConversation = async (chSid: string) => {
     const me = this.client.user.identity;
-    const getUniqueMessage = ({ body, index, sid, author }: Message) => ({ body, index, sid, author, isMe: me === author });
+    const getUniqueMessage = ({ body, index, sid, author }: Message) => ({ body, index, sid, author, isMe: me === author } as MessageStore);
     const sendMessage = async (text: string) => await conversation.sendMessage(text);
     const onJustLogForNow = (event: string) => (a: any) => console.log(`@@conversations.on.${event}` /*a*/);
 
     // TODO: why so slow to send new messages when value is 100?! I think we have to work on Chat.tsx > ScrollView component, perhaps change to something more performant?!
     const MESSAGES_LOAD_COUNT = 10;
-    console.log('@@conversation - loadChat chSid', chSid, this.conversations[chSid]);
+    console.log('@@conversation - loadChat chSid', chSid, conversationsStore.get(chSid));
 
-    if (this.conversations[chSid] && this.conversations[chSid].messages) {
+    if (conversationsStore.exists(chSid)) {
       return;
     }
 
     const conversation = await this.client.getConversationBySid(chSid);
     const messagesObj = (await conversation.getMessages(MESSAGES_LOAD_COUNT)).items;
     const messages = messagesObj.map(getUniqueMessage);
-    console.log('@@conversations - past messages: ', messages);
 
-    this.setConversations((old: any) => {
-      return {
-        ...old,
-        [chSid]: {
-          messages,
-          sendMessage,
-        },
-      };
-    });
+    conversationsStore.startNewChat(chSid, sendMessage, messages);
 
     conversation.addListener('messageRemoved', onJustLogForNow('messageRemoved'));
     conversation.addListener('messageUpdated', onJustLogForNow('messageUpdated'));
@@ -95,35 +72,7 @@ class Conversations {
 
     conversation.addListener('messageAdded', (message) => {
       console.log('@@converstion - messageAdded');
-
-      this.setUnreadBadge((old) => {
-        // do not update in case the active chat window is the current one (when it is -1 means "active window")
-        if (old[chSid] === -1) {
-          return old;
-        }
-
-        console.log('@@@setUnreadBadge old', old);
-        console.log('@@@setUnreadBadge new', {
-          ...old,
-          [chSid]: (old[chSid] || 0) + 1,
-        });
-
-        // else, update with "+1"
-        return {
-          ...old,
-          [chSid]: (old[chSid] || 0) + 1,
-        };
-      });
-
-      this.setConversations((old: any) => {
-        return {
-          ...old,
-          [chSid]: {
-            sendMessage,
-            messages: [...old[chSid].messages, getUniqueMessage(message)],
-          },
-        };
-      });
+      conversationsStore.addMessage(chSid, getUniqueMessage(message));
     });
   };
   //

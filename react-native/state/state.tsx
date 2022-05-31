@@ -12,22 +12,12 @@ export interface UnreadBadge {
   [key: string]: number;
 }
 
-export const taskState = atom({
-  key: 'taskState',
-  default: {},
-});
-
-export const conversationState = atom({
-  key: 'conversationState',
-  default: {} as ConversationsState,
-});
+// export const conversationState = atom({
+//   key: 'conversationState',
+//   default: {} as ConversationsState,
+// });
 
 export const isAvailableState = atom({
   key: 'isAvailableState',
   default: false,
-});
-
-export const unreadBadgeState = atom({
-  key: 'unreadBadgeState',
-  default: {} as UnreadBadge,
 });
