@@ -14,6 +14,7 @@ in progress.... for now, [click here to see it in action](https://www.loom.com/s
 
     - [ ] When a task is accept on Mobile, it cant be complete in the Desktop. Why? I think I am missing something when Accepting a task.
     - [ ] When a task is complete on Mobile, the customer cannot send another SMS to start a new task. Somehow, the SMS goes to the old conversation instead of starting a new one. What I am missing?
+    - [ ] if a task is already in task.complete (or conversation status=closed), hide input field to not allow the user to send a new message
 
 ### Features
 
