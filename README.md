@@ -27,3 +27,4 @@ in progress.... for now, [click here to see it in action](https://www.loom.com/s
     - [x] Add a button to start an outbound call
     - [x] Add a screen to print out the task.attributes (similary as we have in the INFO tab on Desktop)
     - [x] Show badge with the number of unread msgs in the Tasks.tsx
+    - [x] Refactoring the Store to use the lovely @risingstack/react-easy-state
