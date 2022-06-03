@@ -1,6 +1,6 @@
 import { Box, HStack, Input } from 'native-base';
 
-export const SendText = ({ inputText, setInputText, sendMessage }: any) => {
+export const SendText = ({ inputText, setInputText, sendMessage, isWrapping }: any) => {
   const onSubmitEditing = async (event: any) => {
     const text = event.nativeEvent.text;
     console.log('@@onSubmitEditing', text);
@@ -23,7 +23,8 @@ export const SendText = ({ inputText, setInputText, sendMessage }: any) => {
           onChangeText={(text) => setInputText(text)}
           value={inputText}
           onSubmitEditing={onSubmitEditing}
-          placeholder="Message"
+          placeholder={isWrapping ? 'Ops, conversation ended.' : 'Message'}
+          isDisabled={isWrapping}
         />
         {/* <IconButton onPress={navigation.goBack} icon={<ArrowForwardIcon color="black" />} /> */}
       </HStack>

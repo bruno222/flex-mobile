@@ -1,7 +1,7 @@
 import { ArrowBackIcon, Box, HStack, IconButton, KeyboardAvoidingView, ScrollView, StatusBar, Text } from 'native-base';
 import React, { useEffect, useRef, useState } from 'react';
 import { conversationSdk } from '../../helper/conversations-sdk';
-import { ReservationActions, isReservationPending, taskrouterSdk } from '../../helper/taskrouter-sdk';
+import { ReservationActions, isReservationPending, taskrouterSdk, isReservationWrapping } from '../../helper/taskrouter-sdk';
 import { AcceptReject } from './components/AcceptReject';
 import { Dialog } from './components/Dialog';
 import { Loading } from '../../components/Loading';
@@ -112,7 +112,12 @@ export const Chat = view(
         {isReservationPending(task) ? (
           <AcceptReject task={task} reservationSid={task.reservationSid} chSid={chSid} goBack={navigation.goBack} />
         ) : (
-          <SendText inputText={inputText} setInputText={setInputText} sendMessage={thisConversation.sendMessage} />
+          <SendText
+            inputText={inputText}
+            setInputText={setInputText}
+            sendMessage={thisConversation.sendMessage}
+            isWrapping={isReservationWrapping(task)}
+          />
         )}
       </KeyboardAvoidingView>
     );

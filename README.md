@@ -13,7 +13,7 @@ in progress.... for now, [click here to see it in action](https://www.loom.com/s
 
 ### Bugs
 
-    - [ ] When a task is already in task.complete (or conversation status=closed), hide input field to not allow the user to send a new message
+    Aweeee fixed all the known bugs at the moment.
 
 ### Features
 
@@ -30,3 +30,4 @@ in progress.... for now, [click here to see it in action](https://www.loom.com/s
     - [x] Tech Debt - Refactoring the Store to use the lovely @risingstack/react-easy-state (Part 1 of 2)
     - [x] Bug - When a task is accept on Mobile, it cant be complete in the Desktop.
     - [x] Bug - When a task is complete on Mobile, the customer cannot send another SMS to start a new task.
+    - [x] When a task is already in task.complete (or conversation status=closed), hide input field to not allow the user to send a new message

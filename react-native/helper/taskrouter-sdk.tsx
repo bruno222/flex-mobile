@@ -22,6 +22,7 @@ enum AddOrRemove {
 // Helpers
 //
 export const isReservationPending = (task: any) => task && task.reservationStatus === 'pending';
+export const isReservationWrapping = (task: any) => task && task.reservationStatus === 'wrapping';
 
 //
 // Main Class
