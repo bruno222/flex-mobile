@@ -13,8 +13,6 @@ in progress.... for now, [click here to see it in action](https://www.loom.com/s
 
 ### Bugs
 
-    - [ ] When a task is accept on Mobile, it cant be complete in the Desktop.
-    - [ ] When a task is complete on Mobile, the customer cannot send another SMS to start a new task.
     - [ ] When a task is already in task.complete (or conversation status=closed), hide input field to not allow the user to send a new message
 
 ### Features
@@ -30,3 +28,5 @@ in progress.... for now, [click here to see it in action](https://www.loom.com/s
     - [x] Feature - Add a screen to print out the task.attributes (similary as we have in the INFO tab on Desktop)
     - [x] Feature - Show badge with the number of unread msgs in the Tasks.tsx
     - [x] Tech Debt - Refactoring the Store to use the lovely @risingstack/react-easy-state (Part 1 of 2)
+    - [x] Bug - When a task is accept on Mobile, it cant be complete in the Desktop.
+    - [x] Bug - When a task is complete on Mobile, the customer cannot send another SMS to start a new task.

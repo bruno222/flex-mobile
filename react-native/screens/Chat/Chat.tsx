@@ -14,6 +14,7 @@ import { reservationsStore } from '../../store/reservations-store';
 import { unreadBadgeStore } from '../../store/unread-badge-store';
 import { conversationsStore } from '../../store/conversations-store';
 import { view } from '@risingstack/react-easy-state';
+import flexInteractions from '../../helper/flex-interactions-sdk';
 
 interface Props {
   navigation: any;
@@ -43,6 +44,7 @@ export const Chat = view(
     const onDialogClose = () => setIsOpen(false);
     const onDialogDelete = async () => {
       setIsOpen(false);
+      await flexInteractions.close(task);
       await taskrouterSdk.reservationAction(reservationSid, ReservationActions.complete);
       navigation.goBack();
     };
@@ -108,7 +110,7 @@ export const Chat = view(
           </Box>
         </ScrollView>
         {isReservationPending(task) ? (
-          <AcceptReject reservationSid={task.reservationSid} chSid={chSid} goBack={navigation.goBack} />
+          <AcceptReject task={task} reservationSid={task.reservationSid} chSid={chSid} goBack={navigation.goBack} />
         ) : (
           <SendText inputText={inputText} setInputText={setInputText} sendMessage={thisConversation.sendMessage} />
         )}

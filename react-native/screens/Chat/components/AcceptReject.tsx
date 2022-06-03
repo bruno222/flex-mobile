@@ -1,9 +1,17 @@
 import { Box, Button, Center, HStack, Spinner, Text } from 'native-base';
 import { useState } from 'react';
 import { conversationSdk } from '../../../helper/conversations-sdk';
+import flexInteractions from '../../../helper/flex-interactions-sdk';
 import { ReservationActions, taskrouterSdk } from '../../../helper/taskrouter-sdk';
+import { Task } from '../../../store/reservations-store';
 
-export const AcceptReject = ({ reservationSid, chSid, goBack }: any) => {
+interface Props {
+  task: Task;
+  reservationSid: string;
+  chSid: string;
+  goBack: Function;
+}
+export const AcceptReject = ({ task, reservationSid, chSid, goBack }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   console.log('@@AcceptReject', goBack);
@@ -11,8 +19,9 @@ export const AcceptReject = ({ reservationSid, chSid, goBack }: any) => {
   const onAccept = async () => {
     console.log('@@onAccept', reservationSid);
     setIsLoading(true);
-    await conversationSdk.addAgentAsParticipant(chSid);
-    await taskrouterSdk.reservationAction(reservationSid, ReservationActions.accept);
+    // await conversationSdk.addAgentAsParticipant(chSid);
+    // await taskrouterSdk.reservationAction(reservationSid, ReservationActions.accept);
+    await flexInteractions.accept(task);
     setIsLoading(false);
   };
 
