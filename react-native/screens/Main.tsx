@@ -9,14 +9,18 @@ import { SetterOrUpdater, useRecoilState } from 'recoil';
 import { conversationSdk } from '../helper/conversations-sdk';
 import { Loading } from '../components/Loading';
 import { ChatInfo } from './ChatInfo/ChatInfo';
+import { tinyStore } from '../store/tiny-store';
+import { view } from '@risingstack/react-easy-state';
 const Stack = createStackNavigator();
 
-export const Main = ({ token, setToken }: { token: string; setToken: SetterOrUpdater<{}> }) => {
+export const Main = view(() => {
+  const { token } = tinyStore;
+
   const [taskRouterHasStarted, setTaskRouterHasStarted] = useState(false);
 
   useEffect(() => {
     console.log('@@Main loaded');
-    taskrouterSdk.startOrRefresh(token, setToken, setTaskRouterHasStarted, conversationSdk.startOrRefresh);
+    taskrouterSdk.startOrRefresh(setTaskRouterHasStarted, conversationSdk.startOrRefresh);
 
     return () => {
       console.log('@@Main Unloaded');
@@ -66,4 +70,4 @@ export const Main = ({ token, setToken }: { token: string; setToken: SetterOrUpd
       </NavigationContainer>
     </NativeBaseProvider>
   );
-};
+});

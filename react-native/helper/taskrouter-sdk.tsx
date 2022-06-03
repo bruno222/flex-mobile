@@ -28,8 +28,6 @@ export const isReservationPending = (task: any) => task && task.reservationStatu
 //
 class TaskRouter {
   private worker!: Worker;
-  private token!: string;
-  private setToken!: SetterOrUpdater<{}>;
   setTaskRouterHasStarted!: React.Dispatch<React.SetStateAction<boolean>>;
   private startConversations!: Function;
 
@@ -38,20 +36,12 @@ class TaskRouter {
   //
   // Public Functions
   //
-  public startOrRefresh = (
-    token: string,
-    setToken: SetterOrUpdater<{}>,
-    setTaskRouterHasStarted: React.Dispatch<React.SetStateAction<boolean>>,
-    startConversations: Function
-  ) => {
-    this.token = token;
-    this.setToken = setToken;
-    this.setToken = setToken;
+  public startOrRefresh = (setTaskRouterHasStarted: React.Dispatch<React.SetStateAction<boolean>>, startConversations: Function) => {
     this.setTaskRouterHasStarted = setTaskRouterHasStarted;
     this.startConversations = startConversations;
 
     this.worker && this.hardReset(false);
-    this.worker = new Worker(token, {});
+    this.worker = new Worker(tinyStore.token, {});
     this.addRemoveListeners(AddOrRemove.addListener);
   };
 
@@ -130,11 +120,11 @@ class TaskRouter {
   };
 
   private hardReset = (alsoCleanToken: boolean) => {
-    console.log('@@ clearning the token...');
+    console.log('@@ cleaning the token...');
     this.worker.disconnect();
     this.addRemoveListeners(AddOrRemove.removeListener);
     if (alsoCleanToken) {
-      this.setToken('');
+      tinyStore.token = '';
     }
   };
 
@@ -186,7 +176,7 @@ class TaskRouter {
     console.log('@@ ready!');
     this.dispatchWorkerActivity();
     await this.loadInitialtasks();
-    await this.startConversations(this.token);
+    await this.startConversations();
     this.setTaskRouterHasStarted(true);
   };
 

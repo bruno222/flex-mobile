@@ -1,10 +1,12 @@
+import { view } from '@risingstack/react-easy-state';
 import { useState } from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import WebView from 'react-native-webview';
+import { tinyStore } from '../store/tiny-store';
 
 const FLEX_SSO_URL = 'https://flex.twilio.com/prune-narwhal-3797'; // todo: move to env parameter
 
-export const Login = function App({ setToken }: any) {
+export const Login = view(() => {
   let webview: any = null;
 
   /**
@@ -32,7 +34,8 @@ export const Login = function App({ setToken }: any) {
     // Roles: "supervisor"
     // Token: "eyJ6aXAiOiJERUYiLCJjdHkiOiJ0d2lsaW8
 
-    setToken(Token); // todo: do I have to build a token-renewal logic or taskrouter manages that?
+    tinyStore.token = Token;
+    console.log('token: ', Token);
     webview.stopLoading();
     return;
   };
@@ -42,7 +45,7 @@ export const Login = function App({ setToken }: any) {
       <WebView ref={(ref) => (webview = ref)} source={{ uri: FLEX_SSO_URL }} style={styles.webview} onNavigationStateChange={interceptor} />
     </SafeAreaView>
   );
-};
+});
 
 const styles = StyleSheet.create({
   webview: {
