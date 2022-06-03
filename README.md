@@ -20,7 +20,6 @@ in progress.... for now, [click here to see it in action](https://www.loom.com/s
     - [ ] Add Push
     - [ ] Add a way to set the runtime domain (so Customers and SEs can try on their own without installing the whole toolchain)
     - [ ] Add Voice Calls: receive the call via PSTN (contact_url: +49123123) - Or install that voice-sdk repo to receive calls on ReactNative
-    - [ ] Change icons and splashscreen (/assets folder + app.json)
 
 # Future release will come with
 
@@ -31,3 +30,4 @@ in progress.... for now, [click here to see it in action](https://www.loom.com/s
     - [x] Bug - When a task is accept on Mobile, it cant be complete in the Desktop.
     - [x] Bug - When a task is complete on Mobile, the customer cannot send another SMS to start a new task.
     - [x] When a task is already in task.complete (or conversation status=closed), hide input field to not allow the user to send a new message
+    - [x] Feature - Change icons and splashscreen (/assets folder + app.json)
