@@ -10,9 +10,11 @@ import { registerForPushNotificationsAsync } from './helper/push-notification';
 function App() {
   const { token } = tinyStore;
 
-  // Push Notification
+  // Get push notification token
   useEffect(() => {
-    registerForPushNotificationsAsync();
+    registerForPushNotificationsAsync().then((pushToken) => {
+      tinyStore.pushToken = pushToken!;
+    });
   }, []);
 
   // Open browser with the Login URL in case token does not exist.

@@ -9,8 +9,6 @@ const _handleNotificationResponse = (response: any) => {
   console.log('@@Push - response', response);
 };
 
-let token = '';
-
 export const registerForPushNotificationsAsync = async () => {
   if (Platform.OS !== 'android') {
     console.log('Ignoring Push Notification, not an Android device...');
@@ -28,7 +26,7 @@ export const registerForPushNotificationsAsync = async () => {
     return;
   }
 
-  token = (await Notifications.getExpoPushTokenAsync()).data;
+  const token = (await Notifications.getExpoPushTokenAsync()).data;
   console.log('@@Push - token', token);
 
   // Only for Android:
@@ -49,4 +47,6 @@ export const registerForPushNotificationsAsync = async () => {
 
   Notifications.addNotificationReceivedListener(_handleNotification);
   Notifications.addNotificationResponseReceivedListener(_handleNotificationResponse);
+
+  return token;
 };

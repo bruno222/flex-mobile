@@ -8,4 +8,5 @@ import { TOKEN_TEMP } from '../token';
 export const tinyStore = store({
   isAvailable: false,
   token: TOKEN_TEMP,
+  pushToken: '',
 });
