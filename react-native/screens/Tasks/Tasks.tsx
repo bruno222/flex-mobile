@@ -6,7 +6,7 @@ import { tinyStore } from '../../store/tiny-store';
 import { RenderTask } from './components/RenderTask';
 
 export const Tasks = view(({ navigation }: any) => {
-  const { isAvailable, pushToken } = tinyStore;
+  const { isAvailable } = tinyStore;
   const renderSafetyBottom = reservationsStore.length() > 5;
   const hasTasks = reservationsStore.length() > 0;
 

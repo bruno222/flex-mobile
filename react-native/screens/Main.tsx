@@ -5,7 +5,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Box, NativeBaseProvider } from 'native-base';
 import { useEffect, useState } from 'react';
 import { taskrouterSdk } from '../helper/taskrouter-sdk';
-import { SetterOrUpdater, useRecoilState } from 'recoil';
 import { conversationSdk } from '../helper/conversations-sdk';
 import { Loading } from '../components/Loading';
 import { ChatInfo } from './ChatInfo/ChatInfo';

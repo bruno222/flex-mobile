@@ -20,6 +20,8 @@ in progress.... for now, [click here to see it in action](https://www.loom.com/s
     - [ ] Add Push
     - [ ] Add a way to set the runtime domain (so Customers and SEs can try on their own without installing the whole toolchain)
     - [ ] Add Voice Calls: receive the call via PSTN (contact_url: +49123123) - Or install that voice-sdk repo to receive calls on ReactNative
+    - [ ] Token Re-usage: save token on localStorage and use it in case token is still valid (time based)?
+    - [ ] Token Long-term: save an longTerm access-token on Sync (10hr) to avoid having to verify the Agent every hour?
 
 # Future release will come with
 
