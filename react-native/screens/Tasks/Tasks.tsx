@@ -1,6 +1,5 @@
 import { view } from '@risingstack/react-easy-state';
 import { Box, Heading, HStack, ScrollView, StatusBar, Switch, Text, View, VStack } from 'native-base';
-import React from 'react';
 import { taskrouterSdk } from '../../helper/taskrouter-sdk';
 import { reservationsStore } from '../../store/reservations-store';
 import { tinyStore } from '../../store/tiny-store';

@@ -22,7 +22,10 @@
         "foregroundImage": "./assets/icon-twilio.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.bruno222.flexmobile"
+      "package": "com.bruno222.flexmobile",
+      "googleServicesFile": "./google-services.json",
+      "permissions": ["NOTIFICATIONS"],
+      "useNextNotificationsApi": true
     },
     "web": {
       "favicon": "./assets/favicon.png"

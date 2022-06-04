@@ -65,6 +65,20 @@ class TaskRouter {
   //
   // Private Functions
   //
+  private async setPushToken() {
+    const pushToken = tinyStore.pushToken;
+    const a = this.worker.attributes as any;
+    console.log('@@setPushToken', pushToken, a.pushToken, a);
+
+    if (!pushToken || a.pushToken === pushToken) {
+      console.log('@@setPushToken aborting.');
+      return;
+    }
+
+    a.pushToken = pushToken;
+    await this.worker.setAttributes(a);
+  }
+
   private loadInitialtasks = async () => {
     console.log('@@loadInitialtasks');
     const { reservations } = this.worker;
@@ -176,6 +190,7 @@ class TaskRouter {
   private onReady = async (worker: Supervisor) => {
     console.log('@@ ready!');
     this.dispatchWorkerActivity();
+    await this.setPushToken();
     await this.loadInitialtasks();
     await this.startConversations();
     this.setTaskRouterHasStarted(true);
