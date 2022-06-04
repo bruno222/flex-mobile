@@ -2,7 +2,6 @@ import { view } from '@risingstack/react-easy-state';
 import { Avatar, Box, HStack, Spacer, Text, VStack } from 'native-base';
 import { useMemo } from 'react';
 import { TouchableOpacity } from 'react-native';
-import { useRecoilValue } from 'recoil';
 import { timeAgo } from '../../../helper/helper';
 import { isReservationPending } from '../../../helper/taskrouter-sdk';
 import { conversationsStore } from '../../../store/conversations-store';
@@ -22,7 +21,6 @@ export const RenderTask = view(({ task, navigation }: any) => {
     attributes: { conversationSid: chSid },
   } = task;
   const name: string = task.attributes.name || task.attributes.from;
-  // const conversations = useRecoilValue(conversationState);
 
   const lastMessage = conversationsStore.getLastMessage(chSid);
 

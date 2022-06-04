@@ -1,7 +1,6 @@
 import 'react-native-gesture-handler';
 import { Login } from './screens/Login';
 import { Main } from './screens/Main';
-import { RecoilRoot } from 'recoil';
 import { view } from '@risingstack/react-easy-state';
 import { tinyStore } from './store/tiny-store';
 import { useEffect } from 'react';
@@ -23,11 +22,7 @@ function App() {
   }
 
   // Start the App, showing all the Tasks
-  return (
-    <RecoilRoot>
-      <Main token={token} />
-    </RecoilRoot>
-  );
+  return <Main />;
 }
 
 export default view(App);

@@ -4,11 +4,11 @@ in progress.... for now, [click here to see it in action](https://www.loom.com/s
 
 ### Tech Debt
 
-    - [ ] Remove the last piece of Recoil in favor of @risingstack/react-easy-state (Part 2 of 2)
-    - [ ] When a Premise fails, show a Toast
     - [ ] Update README: Add how to install/run locally
     - [ ] Update README: Add how to install and run the .apk
     - [ ] Update README: Add screenshots (or an animated gif?)
+    - [ ] When a Premise fails, show a Toast
+    - [ ] When clicking in a Push Notification, fetch the payload of it and show the exact Chat of it
 
 ### Bugs
 
@@ -22,12 +22,13 @@ in progress.... for now, [click here to see it in action](https://www.loom.com/s
 
 # Future release will come with
 
+    - [x] Feature - Add Push
     - [x] Feature - Add a button to start an outbound call
     - [x] Feature - Add a screen to print out the task.attributes (similary as we have in the INFO tab on Desktop)
     - [x] Feature - Show badge with the number of unread msgs in the Tasks.tsx
-    - [x] Tech Debt - Refactoring the Store to use the lovely @risingstack/react-easy-state (Part 1 of 2)
+    - [x] Feature - Change icons and splashscreen (/assets folder + app.json)
     - [x] Bug - When a task is accept on Mobile, it cant be complete in the Desktop.
     - [x] Bug - When a task is complete on Mobile, the customer cannot send another SMS to start a new task.
-    - [x] When a task is already in task.complete (or conversation status=closed), hide input field to not allow the user to send a new message
-    - [x] Feature - Change icons and splashscreen (/assets folder + app.json)
-    - [x] Add Push
+    - [x] Bug - When a task is already in task.complete (or conversation status=closed), hide input field to not allow the user to send a new message
+    - [x] Tech Debt - Refactoring the Store to use the lovely @risingstack/react-easy-state (Part 1 of 2)
+    - [x] Tech Debt - Remove the last piece of Recoil in favor of @risingstack/react-easy-state (Part 2 of 2)

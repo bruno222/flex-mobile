@@ -36,7 +36,6 @@
     "react-native-swipe-list-view": "^3.2.9",
     "react-native-web": "0.17.7",
     "react-native-webview": "11.18.1",
-    "recoil": "^0.7.3-alpha.2",
     "timeago.js": "^4.0.2"
   },
   "devDependencies": {
