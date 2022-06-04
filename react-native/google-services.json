@@ -1,0 +1,97 @@
+{
+  "project_info": {
+    "project_number": "983992601449",
+    "project_id": "flex-mobile-92b74",
+    "storage_bucket": "flex-mobile-92b74.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:983992601449:android:2ae4429da0a491d41c8bf8",
+        "android_client_info": {
+          "package_name": "com.bruno222.flexmobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "983992601449-anjcdu8ise5j89e8rv9he9ijljl53ada.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9EmczHotDVJeO-2Yb-GbZBUOimqvpJBc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "983992601449-anjcdu8ise5j89e8rv9he9ijljl53ada.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:983992601449:android:5795340e20aebbcc1c8bf8",
+        "android_client_info": {
+          "package_name": "com.example.reactnativetwiliophone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "983992601449-anjcdu8ise5j89e8rv9he9ijljl53ada.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9EmczHotDVJeO-2Yb-GbZBUOimqvpJBc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "983992601449-anjcdu8ise5j89e8rv9he9ijljl53ada.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:983992601449:android:2c549c52d25debb41c8bf8",
+        "android_client_info": {
+          "package_name": "com.twilio.examplevoice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "983992601449-anjcdu8ise5j89e8rv9he9ijljl53ada.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9EmczHotDVJeO-2Yb-GbZBUOimqvpJBc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "983992601449-anjcdu8ise5j89e8rv9he9ijljl53ada.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
