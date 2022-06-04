@@ -11,3 +11,10 @@ npm-debug.*
 web-build/
 .DS_Store
 .LOCAL-NOTES
+.env
+service-account.json
+service-account.*.json
+
+# You can actually remove ".twiliodeployinfo" from git, it is good to commit in your private repo so you can share among your teams the same deployment version.
+# I just ignored for now to avoid mistakes of deploying it, as this repo is more like a Demo then a real project
+.twiliodeployinfo
