@@ -1,10 +1,9 @@
+import { flexTokenStore } from '../store/flex-token-store';
 import { Task } from '../store/reservations-store';
-import { tinyStore } from '../store/tiny-store';
-import { TOKEN_TEMP } from '../token';
 
 const accept = async (task: Task) => {
   console.log('@@acceptTask - task', task);
-  const { token } = tinyStore;
+  const { token } = flexTokenStore;
 
   const {
     reservationSid, // WRxxx
@@ -30,7 +29,7 @@ const accept = async (task: Task) => {
 
 const close = async (task: Task) => {
   console.log('@@endTask - task', task);
-  const { token } = tinyStore;
+  const { token } = flexTokenStore;
 
   const {
     attributes: {
