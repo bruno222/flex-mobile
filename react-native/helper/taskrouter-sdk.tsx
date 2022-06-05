@@ -1,5 +1,5 @@
 import React from 'react';
-import { SetterOrUpdater } from 'recoil';
+import { flexTokenStore } from '../store/flex-token-store';
 import { reservationsStore, Task } from '../store/reservations-store';
 import { tinyStore } from '../store/tiny-store';
 import { Reservation, Supervisor, Worker } from './taskrouter-for-reactnative/index.window';
@@ -42,7 +42,7 @@ class TaskRouter {
     this.startConversations = startConversations;
 
     this.worker && this.hardReset(false);
-    this.worker = new Worker(tinyStore.token, {});
+    this.worker = new Worker(flexTokenStore.token, {});
     this.addRemoveListeners(AddOrRemove.addListener);
   };
 
@@ -139,7 +139,7 @@ class TaskRouter {
     this.worker.disconnect();
     this.addRemoveListeners(AddOrRemove.removeListener);
     if (alsoCleanToken) {
-      tinyStore.token = '';
+      flexTokenStore.set('');
     }
   };
 

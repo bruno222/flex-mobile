@@ -8,12 +8,12 @@ import { taskrouterSdk } from '../helper/taskrouter-sdk';
 import { conversationSdk } from '../helper/conversations-sdk';
 import { Loading } from '../components/Loading';
 import { ChatInfo } from './ChatInfo/ChatInfo';
-import { tinyStore } from '../store/tiny-store';
 import { view } from '@risingstack/react-easy-state';
+import { flexTokenStore } from '../store/flex-token-store';
 const Stack = createStackNavigator();
 
 export const Main = view(() => {
-  const { token } = tinyStore;
+  const { token } = flexTokenStore;
 
   const [taskRouterHasStarted, setTaskRouterHasStarted] = useState(false);
 

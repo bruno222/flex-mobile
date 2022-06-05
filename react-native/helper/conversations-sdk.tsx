@@ -1,7 +1,6 @@
 import { Client, Message } from '@twilio/conversations';
 import { MessageStore, conversationsStore } from '../store/conversations-store';
-import { tinyStore } from '../store/tiny-store';
-import { unreadBadgeStore } from '../store/unread-badge-store';
+import { flexTokenStore } from '../store/flex-token-store';
 
 //
 // Main Class
@@ -14,7 +13,7 @@ class Conversations {
   // Public Functions
   //
   public startOrRefresh = () => {
-    const { token } = tinyStore;
+    const { token } = flexTokenStore;
     console.log('@@updateToken');
     // first time
     if (!this.client) {

@@ -17,7 +17,6 @@ in progress.... for now, [click here to see it in action](https://www.loom.com/s
 ### Features
 
     - [ ] Add Voice Calls: receive the call via PSTN (contact_url: +49123123) - Or install that voice-sdk repo to receive calls on ReactNative
-    - [ ] Token Re-usage: save token on localStorage and use it in case token is still valid (time based)?
     - [ ] Token Long-term: save an longTerm access-token on Sync (10hr) to avoid having to verify the Agent every hour?
 
 # Future release will come with
@@ -27,6 +26,7 @@ in progress.... for now, [click here to see it in action](https://www.loom.com/s
     - [x] Feature - Add a screen to print out the task.attributes (similary as we have in the INFO tab on Desktop)
     - [x] Feature - Show badge with the number of unread msgs in the Tasks.tsx
     - [x] Feature - Change icons and splashscreen (/assets folder + app.json)
+    - [x] Feature - Token Re-usage: save token on localStorage and use it in case token is still valid
     - [x] Bug - When a task is accept on Mobile, it cant be complete in the Desktop.
     - [x] Bug - When a task is complete on Mobile, the customer cannot send another SMS to start a new task.
     - [x] Bug - When a task is already in task.complete (or conversation status=closed), hide input field to not allow the user to send a new message

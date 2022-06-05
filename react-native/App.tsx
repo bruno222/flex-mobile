@@ -5,16 +5,35 @@ import { view } from '@risingstack/react-easy-state';
 import { tinyStore } from './store/tiny-store';
 import { useEffect } from 'react';
 import { registerForPushNotificationsAsync } from './helper/push-notification';
+import { flexTokenStore } from './store/flex-token-store';
+import { Loading } from './components/Loading';
+import { NativeBaseProvider } from 'native-base';
+import { NavigationContainer } from '@react-navigation/native';
 
 function App() {
-  const { token } = tinyStore;
+  const { isStarting, token } = flexTokenStore;
 
-  // Get push notification token
   useEffect(() => {
+    // Get push notification token
     registerForPushNotificationsAsync().then((pushToken) => {
       tinyStore.pushToken = pushToken!;
     });
+
+    // Get Flex token from localStorage
+    (async () => {
+      await flexTokenStore.start();
+    })();
   }, []);
+
+  if (isStarting) {
+    return (
+      <NativeBaseProvider>
+        <NavigationContainer>
+          <Loading />
+        </NavigationContainer>
+      </NativeBaseProvider>
+    );
+  }
 
   // Open browser with the Login URL in case token does not exist.
   if (!token) {
