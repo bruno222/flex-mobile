@@ -7,10 +7,18 @@ import * as HelperType from '../utils/helper.protected';
 const { SyncClass, ohNoCatch, formatNumberToE164, startCachedStuff } = <typeof HelperType>require(Runtime.getFunctions()['utils/helper'].path);
 
 type MyEvent = {
-  code: string;
+  longTermToken?: {
+    token: string;
+  };
+  code?: string;
   RelayState: string;
   idSSO: string;
   phoneNumber: string;
+  request: {
+    headers: {
+      'user-agent': string;
+    };
+  };
 };
 
 type MyContext = {
@@ -95,14 +103,17 @@ export const createTemplateCallback = (ACCOUNT_SID: string, idp: any, _sp: any, 
 
 export const handler: ServerlessFunctionSignature<MyContext, MyEvent> = async (context, event, callback: ServerlessCallback) => {
   try {
+    const userAgent = event.request.headers['user-agent'] || '';
+    const isFlexMobile = userAgent.includes('flex-mobile-react-native'); // changing something here? Look on Login.tsx, component <WebView> as well
     const twilioClient = context.getTwilioClient();
     const { SYNC_SERVICE_SID, SYNC_LIST_SID, DOMAIN_NAME, DOMAIN_WHILE_WORKING_LOCALLY, ACCOUNT_SID, VERIFY_SERVICE_SID } = context;
     const whichDomain = DOMAIN_WHILE_WORKING_LOCALLY ? DOMAIN_WHILE_WORKING_LOCALLY : DOMAIN_NAME;
     const { idp, sp } = startCachedStuff(twilioClient, SYNC_SERVICE_SID, whichDomain);
     const sync = new SyncClass(twilioClient, SYNC_SERVICE_SID, SYNC_LIST_SID);
 
-    console.log('event:', event);
-    const { idSSO, code, RelayState, phoneNumber: notNormalizedMobile } = event;
+    console.log('event:', `(isFlexMobile: ${isFlexMobile})`, userAgent, event);
+    const { idSSO, code, RelayState, phoneNumber: notNormalizedMobile, longTermToken } = event;
+    const isLongTermToken = longTermToken && longTermToken.token;
     const phoneNumber = formatNumberToE164(notNormalizedMobile);
 
     if (!idSSO || !RelayState) {
@@ -112,27 +123,47 @@ export const handler: ServerlessFunctionSignature<MyContext, MyEvent> = async (c
     //
     // Get Agent
     //
-    const { name, role, department, canAddAgents } = await sync.getUser(`user-${phoneNumber}`);
+    const friendlyName = `user-${phoneNumber}`;
+    const userData = await sync.getUser(friendlyName);
+    const { name, role, department, canAddAgents } = userData;
 
     //
-    // Validate Code
+    // Validate via SMS Verify Code
     //
-    if (!code || code.length !== 6) {
-      throw new Error('no donuts for you - invalid code.');
+    if (!isLongTermToken) {
+      if (!code || code.length !== 6) {
+        throw new Error('no donuts for you - invalid code.');
+      }
+
+      const { status } = await twilioClient.verify.services(VERIFY_SERVICE_SID).verificationChecks.create({ to: phoneNumber, code });
+      if (status === 'canceled') {
+        throw new Error('It seems your session has expired. Please refresh the page and start all over again.');
+      }
+      if (status !== 'approved') {
+        throw new Error('no donuts for you - invalid code.');
+      }
     }
 
-    const { status } = await twilioClient.verify.services(VERIFY_SERVICE_SID).verificationChecks.create({ to: phoneNumber, code });
-    if (status === 'canceled') {
-      throw new Error('It seems your session has expired. Please refresh the page and start all over again.');
-    }
-    if (status !== 'approved') {
-      throw new Error('no donuts for you - invalid code.');
+    //
+    // Validate via Long-term Token
+    //
+    if (isLongTermToken) {
+      const now = new Date();
+      if (
+        !longTermToken ||
+        !userData.longTermToken ||
+        !userData.longTermToken.token ||
+        now > new Date(userData.longTermToken.expireAt) ||
+        userData.longTermToken.token !== longTermToken.token
+      ) {
+        throw new Error('LONG_TERM_TOKEN_EXPIRED');
+      }
     }
 
     //
     // SAML logic
     //
-    const user = { friendlyName: `user-${phoneNumber}`, email: `invalid${phoneNumber}@twilio.com`, idSSO, name, department, role, canAddAgents };
+    const user = { friendlyName, email: `invalid${phoneNumber}@twilio.com`, idSSO, name, department, role, canAddAgents };
     const binding = Constants.namespace.binding;
 
     const { context: SAMLResponse } = await idp.createLoginResponse(
@@ -146,11 +177,31 @@ export const handler: ServerlessFunctionSignature<MyContext, MyEvent> = async (c
     );
 
     //
+    // Generate a new long-term Token
+    //
+    if (isFlexMobile) {
+      const daysLater = new Date();
+      daysLater.setHours(daysLater.getHours() + 24 * 7); // token valid for 7 days
+
+      userData.longTermToken = {
+        expireAt: daysLater,
+        token: uuid.v4(),
+      };
+
+      await sync.updateDocument(friendlyName, userData);
+    }
+
+    //
     // Log
     //
-    await sync.addLog('login', `"${user.name}" logged in.`, user.department);
+    const device = isFlexMobile ? '(via Flex Mobile)' : '(via Flex Web)';
+    await sync.addLog('login', `"${user.name}" logged in ${device}`, user.department);
 
-    return callback(null, { SAMLResponse });
+    //
+    // Return
+    //
+    const extraItems = !isFlexMobile ? {} : { longTermToken: userData.longTermToken };
+    return callback(null, { SAMLResponse, ...extraItems });
   } catch (e) {
     ohNoCatch(e, callback);
   }

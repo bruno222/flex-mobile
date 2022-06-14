@@ -11,6 +11,10 @@ interface User {
   role: string;
   canAddAgents: boolean;
   department: string;
+  longTermToken?: {
+    expireAt: Date;
+    token: string;
+  };
 }
 
 export const MIN = 1000 * 60;
@@ -134,12 +138,12 @@ export class SyncClass {
   async getUser(user: string): Promise<User> {
     try {
       const {
-        data: { name, department, role, canAddAgents },
+        data: { name, department, role, canAddAgents, longTermToken },
       } = await this.fetchDocument(user);
       if (!name || !role) {
         throw new Error('Bug: Name of the agent or its role wasnt found.');
       }
-      return { name, department, role, canAddAgents };
+      return { name, department, role, canAddAgents, longTermToken };
     } catch (e) {
       if (e.status === 404) {
         throw new Error('Agent not found using this phone number.');
@@ -194,7 +198,6 @@ type MyContext = {
 };
 
 export const isSupervisor = async (event: MyEvent, context: MyContext, sync: SyncClass) => {
-  // console.log('@@@validator@@@', await validator(event.token, context.ACCOUNT_SID, context.AUTH_TOKEN));
   const { roles, valid, realm_user_id: user, identity } = <any>await validator(event.token, context.ACCOUNT_SID, context.AUTH_TOKEN);
   let supervisorName = identity; // when Admin role
   let supervisorDepartment = 'internal';

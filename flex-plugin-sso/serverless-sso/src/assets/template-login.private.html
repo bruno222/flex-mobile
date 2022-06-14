@@ -85,15 +85,6 @@
         document.getElementById('error').innerText = error;
       };
 
-      if (!idSSO || !RelayState) {
-        showError('For some reason the URL parameters "id" or "RelayState" are not there.. Strange. Investigate this first.');
-        throw new Error('abort');
-      }
-
-      document.getElementById('phoneNumber').value = localStorage.getItem('phoneNumber');
-
-      let step = 1;
-
       const display = (element, whatToDo) => {
         document.getElementById(element).style.display = whatToDo;
       };
@@ -102,6 +93,11 @@
         document.getElementById('button').disabled = trueFalse;
         document.getElementById('button').setAttribute('aria-busy', trueFalse);
       };
+
+      if (!idSSO || !RelayState) {
+        showError('For some reason the URL parameters "id" or "RelayState" are not there.. Strange. Investigate this first.');
+        throw new Error('abort');
+      }
 
       const submitt = async () => {
         buttonDisable(true);
@@ -112,8 +108,11 @@
           return;
         }
 
-        await validateCode();
-        buttonDisable(false);
+        if (step === 2) {
+          await validateCode();
+          buttonDisable(false);
+          return;
+        }
       };
 
       const sendCode = async () => {
@@ -162,7 +161,8 @@
             body: JSON.stringify({ phoneNumber, code, idSSO, RelayState }),
           });
 
-          const { SAMLResponse, error } = await rawResponse.json();
+          const { SAMLResponse, error, longTermToken } = await rawResponse.json();
+          localStorage.setItem('longTermToken', JSON.stringify(longTermToken || {}));
 
           if (!SAMLResponse || error) {
             showError(error);
@@ -178,6 +178,67 @@
           showError(`Error: ${e.message}`);
         }
       };
+
+      const loginViaLongTermToken = async () => {
+        try {
+          const phoneNumber = localStorage.getItem('phoneNumber');
+          const rawResponse = await fetch('https://{DOMAIN_NAME}/login/step2-validatecode', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ longTermToken: longTermTokenSaved, idSSO, RelayState, phoneNumber }),
+          });
+
+          const { SAMLResponse, error, longTermToken } = await rawResponse.json();
+          localStorage.setItem('longTermToken', JSON.stringify(longTermToken || {}));
+
+          if (error === 'LONG_TERM_TOKEN_EXPIRED') {
+            step = 1;
+            display('phoneNumber', '');
+            display('phoneNumberTitle', '');
+            document.getElementById('button').innerText = 'Send me a short code';
+            buttonDisable(false);
+            return;
+          }
+
+          if (!SAMLResponse || error) {
+            showError(error);
+            return;
+          }
+
+          // all good
+          step = 3;
+          document.getElementById('SAMLResponse').value = SAMLResponse;
+          document.getElementById('RelayState').value = RelayState;
+          document.getElementById('form').submit();
+        } catch (e) {
+          showError(`Error: ${e.message}`);
+        }
+      };
+
+      let step = 1;
+      document.getElementById('phoneNumber').value = localStorage.getItem('phoneNumber');
+
+      //
+      // Use long-term token?
+      //
+      const now = new Date();
+      const longTermTokenSaved = JSON.parse(localStorage.getItem('longTermToken') || '{}');
+      if (
+        longTermTokenSaved.expireAt &&
+        longTermTokenSaved.token &&
+        now < new Date(longTermTokenSaved.expireAt) &&
+        localStorage.getItem('phoneNumber')
+      ) {
+        step = 3;
+        buttonDisable(true);
+        display('phoneNumber', 'none');
+        display('phoneNumberTitle', 'none');
+        document.getElementById('button').innerText = 'Authenticating...';
+        loginViaLongTermToken();
+      }
     </script>
   </body>
 </html>
