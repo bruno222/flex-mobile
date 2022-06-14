@@ -1,7 +1,6 @@
 import '@twilio-labs/serverless-runtime-types';
 import { ServerlessCallback, ServerlessFunctionSignature } from '@twilio-labs/serverless-runtime-types/types';
 import * as HelperType from './helper.private';
-import memoizerific from 'memoizerific';
 import { Twilio as TwilioInterface } from 'twilio';
 
 const { ohNoCatch, pushSend, pushInit } = <typeof HelperType>require(Runtime.getFunctions()['helper'].path);
