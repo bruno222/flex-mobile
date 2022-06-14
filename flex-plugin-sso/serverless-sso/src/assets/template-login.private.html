@@ -1,0 +1,183 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Flex - Login</title>
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css" />
+    <style>
+      body {
+        background-color: black;
+        height: 100ch;
+      }
+
+      .container {
+        max-width: 500px;
+        padding: 5px;
+      }
+
+      body > main {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: calc(100vh - 7rem);
+        padding: 1rem 0;
+      }
+
+      article {
+        padding: 0;
+        overflow: hidden;
+      }
+
+      article div {
+        padding: 1rem;
+        padding-bottom: 0;
+      }
+
+      button {
+        margin-top: 10px;
+      }
+
+      #error {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <article class="grid">
+        <div>
+          <hgroup>
+            <h1 id="phoneNumberTitle">Your phone number:</h1>
+            <h1 id="codeTitle" style="display: none">Code:</h1>
+            <h2></h2>
+          </hgroup>
+          <form id="form" action="https://iam.twilio.com/v1/Accounts/{ACCOUNT_SID}/saml2" method="post">
+            <input type="hidden" id="SAMLResponse" name="SAMLResponse" value="" />
+            <input type="hidden" id="RelayState" name="RelayState" value="" />
+          </form>
+          <form onsubmit="event.preventDefault(); submitt(event);">
+            <input type="tel" name="phoneNumber" id="phoneNumber" placeholder="+49111222333" aria-label="phonenumber" required />
+            <input
+              style="display: none"
+              id="code"
+              name="code"
+              placeholder="code received by SMS?"
+              maxlength="10"
+              type="number"
+              aria-required="true"
+              value=""
+              autocomplete="off"
+            />
+            <button aria-busy="false" type="submit" id="button" class="contrast">Send me a short code</button>
+            <small id="error" style="visibility: hidden"></small>
+          </form>
+        </div>
+      </article>
+    </main>
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const idSSO = urlParams.get('id');
+      const RelayState = urlParams.get('RelayState');
+
+      const showError = (error) => {
+        document.getElementById('error').style.visibility = error ? '' : 'hidden';
+        document.getElementById('error').innerText = error;
+      };
+
+      if (!idSSO || !RelayState) {
+        showError('For some reason the URL parameters "id" or "RelayState" are not there.. Strange. Investigate this first.');
+        throw new Error('abort');
+      }
+
+      document.getElementById('phoneNumber').value = localStorage.getItem('phoneNumber');
+
+      let step = 1;
+
+      const display = (element, whatToDo) => {
+        document.getElementById(element).style.display = whatToDo;
+      };
+
+      buttonDisable = (trueFalse) => {
+        document.getElementById('button').disabled = trueFalse;
+        document.getElementById('button').setAttribute('aria-busy', trueFalse);
+      };
+
+      const submitt = async () => {
+        buttonDisable(true);
+
+        if (step === 1) {
+          await sendCode();
+          buttonDisable(false);
+          return;
+        }
+
+        await validateCode();
+        buttonDisable(false);
+      };
+
+      const sendCode = async () => {
+        try {
+          const phoneNumber = document.getElementById('phoneNumber').value;
+          localStorage.setItem('phoneNumber', phoneNumber);
+
+          const rawResponse = await fetch('https://{DOMAIN_NAME}/login/step1-sendcode', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ phoneNumber }),
+          });
+
+          const { ok, error } = await rawResponse.json();
+
+          if (!ok || error) {
+            showError(error);
+            return;
+          }
+
+          display('code', '');
+          display('codeTitle', '');
+          display('phoneNumber', 'none');
+          display('phoneNumberTitle', 'none');
+          document.getElementById('button').innerText = 'Start Flex!';
+          step = 2;
+        } catch (e) {
+          showError(`Error: ${e.message}`);
+        }
+      };
+
+      const validateCode = async () => {
+        try {
+          const phoneNumber = document.getElementById('phoneNumber').value;
+          const code = document.getElementById('code').value;
+
+          const rawResponse = await fetch('https://{DOMAIN_NAME}/login/step2-validatecode', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ phoneNumber, code, idSSO, RelayState }),
+          });
+
+          const { SAMLResponse, error } = await rawResponse.json();
+
+          if (!SAMLResponse || error) {
+            showError(error);
+            return;
+          }
+
+          // all good
+          step = 3;
+          document.getElementById('SAMLResponse').value = SAMLResponse;
+          document.getElementById('RelayState').value = RelayState;
+          document.getElementById('form').submit();
+        } catch (e) {
+          showError(`Error: ${e.message}`);
+        }
+      };
+    </script>
+  </body>
+</html>
