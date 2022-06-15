@@ -1,0 +1,20 @@
+{
+  "name": "scripts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node install.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "ts-node": "^10.8.1",
+    "twilio": "^3.77.2"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.43"
+  }
+}
