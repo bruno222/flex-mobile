@@ -110,7 +110,9 @@ export const Chat = view(
           </Box>
         </ScrollView>
         {isReservationPending(task) ? (
-          <AcceptReject task={task} reservationSid={task.reservationSid} chSid={chSid} goBack={navigation.goBack} />
+          <Box safeAreaBottom={12} bottom="50px" position="absolute" backgroundColor="#e5ded4" w="100%">
+            <AcceptReject task={task} reservationSid={task.reservationSid} goBack={navigation.goBack} />
+          </Box>
         ) : (
           <SendText
             inputText={inputText}

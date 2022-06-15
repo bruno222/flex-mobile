@@ -96,6 +96,7 @@ class TaskRouter {
     } = reservation;
 
     const task: Task = {
+      isVoice: !!(attributes as any).call_sid,
       reservationSid,
       reservationStatus,
       attributes,
@@ -115,6 +116,10 @@ class TaskRouter {
       this.worker.reservations.get(reservationSid)?.task.removeAllListeners();
       this.worker.reservations.get(reservationSid)?.removeAllListeners();
 
+      if (task.isVoice) {
+        reservationsStore.currentVoiceSid = '';
+      }
+
       // TODO: Remove Chat
       // if (attributes && (attributes as any).conversationSid) {
       // TEMPOFF cleanupChat((attributes as any).conversationSid);
@@ -133,6 +138,10 @@ class TaskRouter {
     //
     console.log('@@ taskrouter store add task: ', task);
     reservationsStore.add(task);
+
+    if (task.isVoice) {
+      reservationsStore.currentVoiceSid = task.reservationSid;
+    }
   };
 
   private hardReset = (alsoCleanToken: boolean) => {

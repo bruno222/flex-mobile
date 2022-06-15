@@ -94,7 +94,7 @@ const onReservationCreated = async (event: MyEvent, callback: ServerlessCallback
 
   await pushSend({
     token: pushToken,
-    title: 'Hey, you have a new chat',
+    title: 'Hey, you have a new task',
     body: `from ${customerName}`,
     tag: 'reservation.created',
   });

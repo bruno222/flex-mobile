@@ -8,10 +8,9 @@ import { Task } from '../../../store/reservations-store';
 interface Props {
   task: Task;
   reservationSid: string;
-  chSid: string;
-  goBack: Function;
+  goBack?: Function;
 }
-export const AcceptReject = ({ task, reservationSid, chSid, goBack }: Props) => {
+export const AcceptReject = ({ task, reservationSid, goBack }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   console.log('@@AcceptReject', goBack);
@@ -20,14 +19,14 @@ export const AcceptReject = ({ task, reservationSid, chSid, goBack }: Props) => 
     console.log('@@onAccept', reservationSid);
     setIsLoading(true);
     // await conversationSdk.addAgentAsParticipant(chSid);
-    // await taskrouterSdk.reservationAction(reservationSid, ReservationActions.accept);
-    await flexInteractions.accept(task);
+    task.isVoice && (await taskrouterSdk.reservationAction(reservationSid, ReservationActions.accept));
+    !task.isVoice && (await flexInteractions.accept(task));
     setIsLoading(false);
   };
 
   const onReject = async () => {
     console.log('@@onReject', reservationSid);
-    goBack();
+    goBack && goBack();
     await taskrouterSdk.reservationAction(reservationSid, ReservationActions.reject);
   };
 
@@ -44,23 +43,21 @@ export const AcceptReject = ({ task, reservationSid, chSid, goBack }: Props) => 
   }
 
   return (
-    <Box safeAreaBottom={12} bottom="50px" position="absolute" backgroundColor="#e5ded4" w="100%">
-      <HStack justifyContent="center" top="20px">
-        <Center paddingRight="40px">
-          <Button size="lg" backgroundColor="#1db054" onPress={onAccept} ena>
-            <Text w="120px" textAlign="center">
-              Accept
-            </Text>
-          </Button>
-        </Center>
-        <Center>
-          <Button size="lg" backgroundColor="#d61f20" onPress={onReject}>
-            <Text w="120px" textAlign="center">
-              Reject
-            </Text>
-          </Button>
-        </Center>
-      </HStack>
-    </Box>
+    <HStack justifyContent="center" top="20px">
+      <Center paddingRight="40px">
+        <Button size="lg" backgroundColor="#1db054" onPress={onAccept} ena>
+          <Text w="120px" textAlign="center">
+            Accept
+          </Text>
+        </Button>
+      </Center>
+      <Center>
+        <Button size="lg" backgroundColor="#d61f20" onPress={onReject}>
+          <Text w="120px" textAlign="center">
+            Reject
+          </Text>
+        </Button>
+      </Center>
+    </HStack>
   );
 };

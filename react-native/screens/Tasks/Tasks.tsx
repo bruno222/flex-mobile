@@ -4,9 +4,11 @@ import { taskrouterSdk } from '../../helper/taskrouter-sdk';
 import { reservationsStore } from '../../store/reservations-store';
 import { tinyStore } from '../../store/tiny-store';
 import { IconMenu } from './components/IconMenu';
-import { RenderTask } from './components/RenderTask';
+import { RenderTaskChat } from './components/RenderTaskChat';
+import { RenderTaskVoice } from './components/RenderTaskVoice';
 
 export const Tasks = view(({ navigation }: any) => {
+  const { currentVoiceSid, all } = reservationsStore;
   const { isAvailable } = tinyStore;
   const renderSafetyBottom = reservationsStore.length() > 5;
   const hasTasks = reservationsStore.length() > 0;
@@ -20,8 +22,8 @@ export const Tasks = view(({ navigation }: any) => {
 
   const RenderTasks = () => (
     <ScrollView showsVerticalScrollIndicator={false} w="100%" backgroundColor="white">
-      {Object.values(reservationsStore.all).map((task: any) => (
-        <RenderTask key={task.sid} task={task} navigation={navigation} />
+      {Object.values(all).map((task: any) => (
+        <RenderTaskChat key={task.sid} task={task} navigation={navigation} />
       ))}
       {renderSafetyBottom && <Box safeAreaBottom={12} />}
     </ScrollView>
@@ -34,6 +36,15 @@ export const Tasks = view(({ navigation }: any) => {
       </Heading>
     </Box>
   );
+
+  if (currentVoiceSid) {
+    const task = all[currentVoiceSid];
+    if (!task) {
+      return null;
+    }
+
+    return <RenderTaskVoice key={task.sid} task={task} />;
+  }
 
   return (
     <View>

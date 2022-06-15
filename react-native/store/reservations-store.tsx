@@ -1,6 +1,7 @@
 import { store } from '@risingstack/react-easy-state';
 
 export interface Task {
+  isVoice: boolean;
   reservationSid: string;
   reservationStatus: string;
   attributes: any;
@@ -17,6 +18,7 @@ interface Reservations {
 }
 
 const emptyObj: Task = {
+  isVoice: false,
   reservationSid: '',
   reservationStatus: 'string',
   attributes: {},
@@ -29,6 +31,7 @@ const emptyObj: Task = {
 };
 
 export const reservationsStore = store({
+  currentVoiceSid: '', // reservation sid, not task sid
   all: {} as Reservations,
   add(task: Task) {
     reservationsStore.all[task.reservationSid] = task;

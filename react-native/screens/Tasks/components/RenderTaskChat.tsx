@@ -8,13 +8,13 @@ import { conversationsStore } from '../../../store/conversations-store';
 // import { conversationState } from '../../../state/state';
 import { UnreadMsgs } from './UnreadMsgs';
 
-export const RenderTask = view(({ task, navigation }: any) => {
+export const RenderTaskChat = view(({ task, navigation }: any) => {
+  console.log('@@atask', task);
+
   // Not a conversation task
   if (!task || !task.attributes || !task.attributes.conversationSid) {
     return null;
   }
-
-  console.log('@@atask', task);
 
   const {
     reservationSid,
