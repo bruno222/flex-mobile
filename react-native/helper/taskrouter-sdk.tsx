@@ -24,6 +24,7 @@ enum AddOrRemove {
 export const isReservationPending = (task: any) => task && task.reservationStatus === 'pending';
 export const isReservationWrapping = (task: any) => task && task.reservationStatus === 'wrapping';
 
+const ACTIVITY_WHEN_ONLINE = 'Available on Mobile';
 //
 // Main Class
 //
@@ -47,7 +48,7 @@ class TaskRouter {
   };
 
   public async toggleWorkerActivity(available: boolean) {
-    const activityName = available ? 'Available' : 'Offline';
+    const activityName = available ? ACTIVITY_WHEN_ONLINE : 'Offline';
     const optionsWhenMovingToOffline = available ? {} : { rejectPendingReservations: true };
 
     this.worker.activities.forEach((act: any) => {
@@ -144,7 +145,7 @@ class TaskRouter {
   };
 
   private dispatchWorkerActivity = () => {
-    const isAvailable = this.worker.activity.name === 'Available';
+    const isAvailable = this.worker.activity.name === ACTIVITY_WHEN_ONLINE;
     tinyStore.isAvailable = isAvailable;
     console.log('@@ isAvailable', isAvailable, this.worker.activity.name);
   };
@@ -189,7 +190,10 @@ class TaskRouter {
 
   private onReady = async (worker: Supervisor) => {
     console.log('@@ ready!');
+
     this.dispatchWorkerActivity();
+    await this.toggleWorkerActivity(tinyStore.isAvailable);
+
     await this.setPushToken();
     await this.loadInitialtasks();
     await this.startConversations();

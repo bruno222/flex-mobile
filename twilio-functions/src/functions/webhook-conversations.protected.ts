@@ -16,6 +16,8 @@ type MyEvent = {
 pushInit();
 
 let cacheWorkspaceSid = '';
+const ACTIVITY_WHEN_ONLINE = 'Available on Mobile';
+
 export const getTaskrouterSid = async (twilioClient: TwilioInterface) => {
   if (cacheWorkspaceSid) {
     console.log('getTaskrouterSid: From Cache...');
@@ -30,11 +32,15 @@ export const getTaskrouterSid = async (twilioClient: TwilioInterface) => {
   return cacheWorkspaceSid;
 };
 
-const cacheTokens: any = {};
+const cache: any = {
+  tokens: {},
+  expireAt: new Date(1),
+};
+
 export const getWorkerPushToken = async (twilioClient: TwilioInterface, identity: string) => {
-  if (cacheTokens[identity]) {
+  if (cache.tokens[identity]) {
     console.log(`getWorkerPushToken: From Cache for "${identity}"...`);
-    return cacheTokens[identity];
+    return cache.tokens[identity];
   }
   const workspaceSid = await getTaskrouterSid(twilioClient);
   const friendlyName = decodeURIComponent(identity.replace(/_/gi, '%')); // convert user_2D_2B4917672800000 to user-+491767200000
@@ -45,6 +51,11 @@ export const getWorkerPushToken = async (twilioClient: TwilioInterface, identity
     return;
   }
 
+  if (worker[0].activityName !== ACTIVITY_WHEN_ONLINE) {
+    console.log(`Worker "${friendlyName}" is not Available on Mobile. His/her activity is current "${worker[0].activityName}". Aborting Push...`);
+    return;
+  }
+
   const { attributes } = worker[0];
   const { pushToken } = JSON.parse(attributes);
 
@@ -52,12 +63,24 @@ export const getWorkerPushToken = async (twilioClient: TwilioInterface, identity
     console.log(`Worker "${friendlyName}" does not have worker.attributes.pushToken, aborting...`);
     return;
   }
-  cacheTokens[identity] = pushToken;
+  cache.tokens[identity] = pushToken;
+
   return pushToken;
+};
+
+const cleanCache = () => {
+  const now = new Date();
+  if (now > cache.expireAt) {
+    cache.tokens = {};
+  }
+  cache.expireAt = new Date();
+  cache.expireAt.setSeconds(cache.expireAt.getSeconds() + 30); // 30 seconds cache
 };
 
 export const handler: ServerlessFunctionSignature<MyContext, MyEvent> = async (context, event, callback: ServerlessCallback) => {
   try {
+    cleanCache();
+
     console.log('event:', event);
     const { EventType, Author, ConversationSid, Body } = event;
 
