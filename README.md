@@ -27,8 +27,10 @@ in progress.... for now, [click here to see it in action](https://www.loom.com/s
     - [x] Feature - Change icons and splashscreen (/assets folder + app.json)
     - [x] Feature - Token Re-usage: save token on localStorage and use it in case token is still valid
     - [x] Feature - Long-term Token: save an longTerm access-token on localStorage for days to avoid having to verify the Agent in every each hour
+    - [x] Feature - Show the version of the App and the Bundle.
     - [x] Bug - When a task is accept on Mobile, it cant be complete in the Desktop.
     - [x] Bug - When a task is complete on Mobile, the customer cannot send another SMS to start a new task.
     - [x] Bug - When a task is already in task.complete (or conversation status=closed), hide input field to not allow the user to send a new message
     - [x] Tech Debt - Refactoring the Store to use the lovely @risingstack/react-easy-state (Part 1 of 2)
     - [x] Tech Debt - Remove the last piece of Recoil in favor of @risingstack/react-easy-state (Part 2 of 2)
+    - [x] Tech Debt - Add scripts to do the initial install of this whole Flex Mobile setup

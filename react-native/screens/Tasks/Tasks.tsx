@@ -3,6 +3,7 @@ import { Box, Heading, HStack, ScrollView, StatusBar, Switch, Text, View, VStack
 import { taskrouterSdk } from '../../helper/taskrouter-sdk';
 import { reservationsStore } from '../../store/reservations-store';
 import { tinyStore } from '../../store/tiny-store';
+import { IconMenu } from './components/IconMenu';
 import { RenderTask } from './components/RenderTask';
 
 export const Tasks = view(({ navigation }: any) => {
@@ -44,12 +45,16 @@ export const Tasks = view(({ navigation }: any) => {
             Chats
           </Text>
         </HStack>
-        <HStack paddingRight="10px">
-          {/* <ArrowBackIcon size="5" mt="0.5" color="emerald.500" /> */}
-          {/* <Text color="white" alignSelf="flex-end">
+        {/* <HStack paddingRight="10px"> */}
+        {/* <ArrowBackIcon size="5" mt="0.5" color="emerald.500" /> */}
+        {/* <Text color="white" alignSelf="flex-end">
             Available
           </Text> */}
+
+        {/* </HStack> */}
+        <HStack paddingRight="10px" alignItems="center">
           <Switch isChecked={isAvailable} size="md" onChange={onChangeActivity} />
+          <IconMenu />
         </HStack>
       </HStack>
       {hasTasks ? <RenderTasks /> : <RenderNoTasks />}
