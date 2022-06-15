@@ -53,7 +53,7 @@ We have to install 2 assets:
 1. clone this repo;
 2. execute `cd ./serverless-sso` to go to the Twilio Functions folder.
 3. `npm install` to install the packages into your computer.
-4. rename `.env-example` from this folder to `.env` and follow the instructions in the `.env` file.
+4. rename `/.env-example` from the root folder to `/.env` and follow the instructions in the `.env` file.
 5. you have to generate the public/private pair keys for the SSO. Go to `./serverless-sso/src/assets` folder and execute the two commands below:
 
    ```

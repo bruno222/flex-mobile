@@ -2,6 +2,7 @@
 	"commands": {},
 	"environments": {},
 	"projects": {},
+        "env": "../../.env",
 	"runtime": "node14" 	/* The version of Node.js to deploy the build to. (node10 or node12) */,
 	// "assets": true 	/* Upload assets. Can be turned off with --no-assets */,
 	// "assetsFolder": null 	/* Specific folder name to be used for static assets */,
