@@ -8,6 +8,7 @@ type MyEvent = {
   EventType: 'reservation.created' | string;
   TaskAttributes: string;
   WorkerAttributes: string;
+  WorkerActivityName: string;
   WorkerName: string;
 };
 
@@ -17,6 +18,7 @@ type MyContext = {
   VERIFY_SERVICE_SID: string;
 };
 
+const ACTIVITY_WHEN_ONLINE = 'Available on Mobile';
 pushInit();
 
 export const handler: ServerlessFunctionSignature<MyContext, MyEvent> = async (context, event, callback: ServerlessCallback) => {
@@ -24,10 +26,14 @@ export const handler: ServerlessFunctionSignature<MyContext, MyEvent> = async (c
     console.log('event:', event);
     const twilioClient = context.getTwilioClient();
 
-    const { EventType, WorkerName, WorkerAttributes, TaskAttributes } = event;
+    const { EventType, WorkerName, WorkerAttributes, WorkerActivityName, TaskAttributes } = event;
 
     if (EventType !== 'reservation.created') {
       return callback(null, { msg: `aborting because ${EventType} !== reservation.created` });
+    }
+
+    if (WorkerActivityName !== ACTIVITY_WHEN_ONLINE) {
+      return callback(null, { msg: `aborting because ${WorkerActivityName} !== ${ACTIVITY_WHEN_ONLINE}` });
     }
 
     const { pushToken } = JSON.parse(WorkerAttributes);
