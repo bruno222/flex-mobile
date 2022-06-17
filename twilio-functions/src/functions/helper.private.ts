@@ -33,9 +33,16 @@ export interface PushMessage {
   tag: string;
 }
 
+let pushInitExecuted = false;
 export const pushInit = () => {
+  if (pushInitExecuted) {
+    console.log('pushInit - aborting as it was executed before');
+    return;
+  }
+
   (process.env as any).GOOGLE_APPLICATION_CREDENTIALS = Runtime.getAssets()['/service-account.json'].path;
   initializeApp();
+  pushInitExecuted = true;
 };
 export const pushSend = async ({ token, title, body, tag }: PushMessage) => {
   const message: TokenMessage = {
