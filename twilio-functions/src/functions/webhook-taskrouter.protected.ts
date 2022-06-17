@@ -12,24 +12,26 @@ type MyEvent = {
   WorkerName: string;
   WorkspaceSid: string;
   WorkerSid: string;
+  ReservationSid: string;
+  TaskSid: string;
+  request: {
+    [key: string]: any;
+  };
 };
 
-type MyContext = {
-  SYNC_SERVICE_SID: string;
-  SYNC_LIST_SID: string;
-  VERIFY_SERVICE_SID: string;
-};
+type MyContext = {};
 
 const ACTIVITY_WHEN_ONLINE = 'Available on Mobile';
 pushInit();
 
 export const handler: ServerlessFunctionSignature<MyContext, MyEvent> = async (context, event, callback: ServerlessCallback) => {
   try {
+    console.log('headers:', event.request.headers);
     console.log('event:', event);
     const { EventType } = event;
 
     if (EventType === 'reservation.created') {
-      await onReservationCreated(event, callback);
+      await onReservationCreated(context, event, callback);
       return;
     }
 
@@ -77,24 +79,52 @@ const onWorkerActivityUpdate = async (context: Context<MyContext>, event: MyEven
   return callback(null, { ok: 1 });
 };
 
-const onReservationCreated = async (event: MyEvent, callback: ServerlessCallback) => {
-  const { WorkerName, WorkerAttributes, WorkerActivityName, TaskAttributes } = event;
+const onReservationCreated = async (context: Context<MyContext>, event: MyEvent, callback: ServerlessCallback) => {
+  const { DOMAIN_NAME } = context;
+  const { WorkerName, WorkspaceSid, ReservationSid, TaskSid, WorkerAttributes, WorkerActivityName, WorkerSid, TaskAttributes } = event;
 
   if (WorkerActivityName !== ACTIVITY_WHEN_ONLINE) {
     return callback(null, { msg: `aborting because ${WorkerActivityName} !== ${ACTIVITY_WHEN_ONLINE}` });
   }
 
   const { pushToken } = JSON.parse(WorkerAttributes);
-  const { name, from } = JSON.parse(TaskAttributes);
+  const { name, from, call_sid } = JSON.parse(TaskAttributes);
   const customerName = name || from;
+  const isVoice = !!call_sid;
+  const workerPhoneNumber = WorkerName.replace('user-', ''); // user-+4917699999999 to +4917699999999
+  const twilioClient = context.getTwilioClient();
 
+  //
+  // Voice Tasks -> Call to the agent directly
+  //
+  if (isVoice) {
+    console.log('is a call, calling the agents phone...');
+    await twilioClient.taskrouter
+      .workspaces(WorkspaceSid)
+      .tasks(TaskSid)
+      .reservations(ReservationSid)
+      .update({
+        to: workerPhoneNumber,
+        instruction: 'conference',
+        endConferenceOnCustomerExit: true,
+        endConferenceOnExit: true,
+        statusCallback: `https://${DOMAIN_NAME}/webhook-conference`,
+        // statusCallback: `https://bkilian.eu.ngrok.io/webhook-conference`,
+        statusCallbackEvent: ['completed'], // 'answered', 'initiated', 'ringing'*/,
+      });
+    return callback(null, { ok: 1 });
+  }
+
+  //
+  // Chat Tasks -> send push notifications
+  //
   if (!pushToken) {
     return callback(null, { msg: `${WorkerName} with worker.attributes.pushToken is empty.` });
   }
 
   await pushSend({
     token: pushToken,
-    title: 'Hey, you have a new task',
+    title: 'Hey, you have a new chat!',
     body: `from ${customerName}`,
     tag: 'reservation.created',
   });
