@@ -2,20 +2,20 @@
 
 Supervisor listing all the Agents:
 
-![Supervisor View 1](/.screenshots/supervisor-view-screen1.png)
+![Supervisor View 1](/flex-plugin-sso/.screenshots/supervisor-view-screen1.png)
 
 Supervisor adding a new Agent:
 
-![Supervisor View 2](/.screenshots/supervisor-view-screen2.png)
+![Supervisor View 2](/flex-plugin-sso/.screenshots/supervisor-view-screen2.png)
 
 Supervisor viewing the Audit Events
 
-![Supervisor View 3](/.screenshots/supervisor-view-screen3.png)
+![Supervisor View 3](/flex-plugin-sso/.screenshots/supervisor-view-screen3.png)
 
 Agent logging in:
 
 <p align="center" width="100%">
-    <img width="70%" src=".screenshots/agent-login-screen1.png">
+    <img width="70%" src="/flex-plugin-sso/.screenshots/agent-login-screen1.png">
 </p>
 
 ## What
