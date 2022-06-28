@@ -34,11 +34,11 @@ Push Notifications won't work on Expo Go. You need to build your own Android App
 
 ## Testing the Inbound Calls
 
-Ignore this step for now, you probably haven't installed the `./twilio-functions` folder yet.
+Ignore this step for now, you probably haven't installed the `./twilio-functions` folder yet.  We will cover this test scenario there.
 
 ## Testing Push Notifications
 
-Ignore this step for now, you probably: haven't installed the `./twilio-functions` folder yet.
+Ignore this step for now for the same reason as above.
 
 ## Building the App
 
