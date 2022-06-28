@@ -17,14 +17,14 @@ These functions allow Push Notifications and Inbound Calls to work. These functi
 
 You have to go to 2 places to set the URL of these just-deployed functions:
 
-** Step 1 of 2 - Taskrouter Event Callbacks**:
+**Step 1 of 2 - Taskrouter Event Callbacks:**
 
 1. Go to `Twilio Console > Menu TaskRouter > (select your workspace) > Settings`
 2. In the `EVENT CALLBACK URL` field, paste the URL of your `webhook-taskrouter` function. For example, for me it was `https://flex-mobile-7886-dev.twil.io/webhook-taskrouter`.
 3. Select `SPECIFIC EVENTS` and then be patient with our bad UX here: You will have to unselect all checkboxes, just leave checked these two: `Reservation Created` and `Worker Activity Updated`
 4. Save it.
 
-** Step 2 of 2 - Conversations Event Callbacks**:
+**Step 2 of 2 - Conversations Event Callbacks:**
 
 1. Go to `Twilio Console > Menu Conversations > Manage > Global webhooks`
 2. Paste into `Post-Event URL` the URL of your `webhook-conversation` function. For example, for me it was `https://flex-mobile-7886-dev.twil.io/webhook-conversations`
@@ -36,7 +36,7 @@ Cool! In theory, Inbound Calls and Push notifications should be working now!
 
 ## Testing the Inbound Calls
 
-1. If you haven't done yet, get a new Phone Number on th Console and attached it to a Studio Flow to send it to flex. Call once from your celphone and see on Flex Desktop (not on mobile) if you receive it! Make sure you are in "Available" status.
+1. If you haven't done it yet, get a new Phone Number on the Console and attached it to a Studio Flow to send it to flex. Call once from your celphone and see on Flex Desktop (not on mobile) if you receive it! Make sure you are in "Available" status.
 
 2. Now open the mobile App and toggle the on/off to ON (so you will see, on Flex Desktop the activity will get changed to "Available on Mobile").
 
@@ -48,11 +48,11 @@ Not working?
 
 ## Testing Push Notifications
 
-1. Make sure inbound calls are working first, this means your functions was properly deployed and configured.
+1. Make sure inbound calls are working first, this means your functions were properly deployed and configured.
 
-2. Make sure you have you have the App installed via the `.APK` file (and not just the `Expo Go`... Push Notifications won't work on `Expo Go`).
+2. Make sure you have the App installed via the `.APK` file (and not just the `Expo Go`... Push Notifications won't work on `Expo Go`).
 
-3. Also, open at least once the `.APK` and log in properly... This will guarantee the App has saved the `pushToken` into your Worker's attribute.
+3. Also, open at least once the `.APK` and login properly... This will guarantee the App has saved the `pushToken` into your Worker's attribute.
 
 4. Double-checking if everything is fine until here: Go to `Twilio Console > Menu TaskRouter > (select your workspace) > Worker > (select your worker)` and check in the `Attributes` field if the attribute `pushToken` exists. It should!
 
@@ -60,9 +60,9 @@ Not working?
 
 6. Now close the Mobile App... Pushes are not visible if the App is open.
 
-7. Pretend to be the customer and send a SMS to your contact center.
+7. Pretend to be the customer and send an SMS to your contact center.
 
-If everything goes right, you should receive an Push Notification on your cellphone!
+If everything goes right, you should receive a Push Notification on your cellphone!
 
 Not working?
 
