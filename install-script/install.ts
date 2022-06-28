@@ -3,7 +3,7 @@ import path from 'path';
 import { Twilio } from 'twilio';
 import { log, TaskRouterClass } from './helper';
 
-const dotenvPath = path.resolve(process.cwd(), '../flex-plugin-sso/serverless-sso/.env');
+const dotenvPath = path.resolve(process.cwd(), '../.env');
 dotenv.config({
   path: dotenvPath,
 });
