@@ -114,7 +114,7 @@ export const handler: ServerlessFunctionSignature<MyContext, MyEvent> = async (c
     console.log('event:', `(isFlexMobile: ${isFlexMobile})`, userAgent, event);
     const { idSSO, code, RelayState, phoneNumber: notNormalizedMobile, longTermToken } = event;
     const isLongTermToken = longTermToken && longTermToken.token;
-    const phoneNumber = formatNumberToE164(notNormalizedMobile);
+    const normalizedMobile= formatNumberToE164(notNormalizedMobile);
 
     if (!idSSO || !RelayState) {
       throw new Error('idSSO or RelayState are null. How come?');
@@ -123,9 +123,9 @@ export const handler: ServerlessFunctionSignature<MyContext, MyEvent> = async (c
     //
     // Get Agent
     //
-    const friendlyName = `user-${phoneNumber}`;
+    const friendlyName = `user-${normalizedMobile}`;
     const userData = await sync.getUser(friendlyName);
-    const { name, role, department, canAddAgents } = userData;
+    const { name, role, department, canAddAgents, phoneNumber } = userData;
 
     //
     // Validate via SMS Verify Code
@@ -135,7 +135,7 @@ export const handler: ServerlessFunctionSignature<MyContext, MyEvent> = async (c
         throw new Error('no donuts for you - invalid code.');
       }
 
-      const { status } = await twilioClient.verify.services(VERIFY_SERVICE_SID).verificationChecks.create({ to: phoneNumber, code });
+      const { status } = await twilioClient.verify.services(VERIFY_SERVICE_SID).verificationChecks.create({ to: normalizedMobile, code });
       if (status === 'canceled') {
         throw new Error('It seems your session has expired. Please refresh the page and start all over again.');
       }
@@ -163,7 +163,7 @@ export const handler: ServerlessFunctionSignature<MyContext, MyEvent> = async (c
     //
     // SAML logic
     //
-    const user = { friendlyName, email: `invalid${phoneNumber}@twilio.com`, idSSO, name, department, role, canAddAgents };
+    const user = { friendlyName, email: `invalid${normalizedMobile}@twilio.com`, idSSO, name, department, role, canAddAgents, phoneNumber};
     const binding = Constants.namespace.binding;
 
     const { context: SAMLResponse } = await idp.createLoginResponse(
@@ -187,7 +187,6 @@ export const handler: ServerlessFunctionSignature<MyContext, MyEvent> = async (c
         expireAt: daysLater,
         token: uuid.v4(),
       };
-
       await sync.updateDocument(friendlyName, userData);
     }
 

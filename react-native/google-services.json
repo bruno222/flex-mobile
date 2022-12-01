@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "983992601449",
-    "project_id": "flex-mobile-92b74",
-    "storage_bucket": "flex-mobile-92b74.appspot.com"
+    "project_number": "803107402859",
+    "project_id": "flex-mobile-d08b3",
+    "storage_bucket": "flex-mobile-d08b3.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:983992601449:android:2ae4429da0a491d41c8bf8",
+        "mobilesdk_app_id": "1:803107402859:android:3907416914bfe080af6d2e",
         "android_client_info": {
-          "package_name": "com.bruno222.flexmobile"
+          "package_name": "com.mld.flexmobile"
         }
       },
       "oauth_client": [
         {
-          "client_id": "983992601449-anjcdu8ise5j89e8rv9he9ijljl53ada.apps.googleusercontent.com",
+          "client_id": "803107402859-5oauv9qt75f8gqms40j1h2jtpss5bk1s.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD9EmczHotDVJeO-2Yb-GbZBUOimqvpJBc"
+          "current_key": "AIzaSyDIp4StFbcwqD_h2VWe045zhOdjf7AXEh8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "983992601449-anjcdu8ise5j89e8rv9he9ijljl53ada.apps.googleusercontent.com",
+              "client_id": "803107402859-5oauv9qt75f8gqms40j1h2jtpss5bk1s.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
