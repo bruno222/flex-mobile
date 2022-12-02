@@ -11,6 +11,7 @@ interface User {
   role: string;
   canAddAgents: boolean;
   department: string;
+  phoneNumber: string;
   longTermToken?: {
     expireAt: Date;
     token: string;
@@ -137,13 +138,14 @@ export class SyncClass {
   // user format: `user-${phoneNumber}`
   async getUser(user: string): Promise<User> {
     try {
+      let {data }= await this.fetchDocument(user)
       const {
-        data: { name, department, role, canAddAgents, longTermToken },
+        data: { name, department, role, canAddAgents, longTermToken, phoneNumber },
       } = await this.fetchDocument(user);
       if (!name || !role) {
         throw new Error('Bug: Name of the agent or its role wasnt found.');
       }
-      return { name, department, role, canAddAgents, longTermToken };
+      return { name, department, role, canAddAgents, longTermToken, phoneNumber};
     } catch (e) {
       if (e.status === 404) {
         throw new Error('Agent not found using this phone number.');
